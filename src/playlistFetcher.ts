@@ -10,4 +10,19 @@ export interface Playlist {
 export async function fetchNewMusicFridayPlaylists(fetcher: () => Promise<Playlist[]>): Promise<Playlist[]> {
   const playlists = await fetcher();
   return playlists.filter(p => p.name.startsWith('New Music Friday'));
+}
+
+export function generatePlaylistHtml(playlists: Playlist[]): string {
+  return `<!DOCTYPE html>
+<html>
+  <head>
+    <title>New Music Friday Playlists</title>
+  </head>
+  <body>
+    <h1>New Music Friday Playlists</h1>
+    <ul>
+      ${playlists.map(p => `<li id="${p.id}">${p.name}</li>`).join('\n      ')}
+    </ul>
+  </body>
+</html>`;
 } 
