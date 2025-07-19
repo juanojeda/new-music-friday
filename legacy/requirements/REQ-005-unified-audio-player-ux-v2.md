@@ -1,6 +1,7 @@
 # REQ-005: Unified Audio Player UX v2 (Single Player, Playlist Selection, Track Display)
 
 ## User Story
+
 As a visitor, I want to control all playlists from a single, unified audio player, so that I have a consistent and clear listening experience and can easily switch between playlists and tracks.
 
 ## Functional Requirements
@@ -57,8 +58,9 @@ As a visitor, I want to control all playlists from a single, unified audio playe
   - Description: The player UI must clearly indicate the selected playlist and current track.
 
 ## Technical Specifications & Guidance
+
 - Use the YouTube IFrame Player API to embed and control the playlist.
 - Only one player instance should be active at a time.
 - When a playlist is selected, update the player to load the new playlist and update the UI.
 - Use the YouTube Player API to get the current track title (via `getVideoData().title`).
-- Ensure the player works on both desktop and mobile browsers. 
+- Ensure the player works on both desktop and mobile browsers.

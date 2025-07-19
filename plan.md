@@ -1,11 +1,13 @@
 # Project Plan
 
 ## Project Overview
+
 A web app that fetches, displays, and allows playback of public YouTube Music playlists named "New Music Friday". The app updates weekly, requires no login, and sorts playlists by recency.
 
 ## Work Items
 
 ### Core Features - Essential functionality for the MVP
+
 - [ ] **CF-001**: Implement weekly playlist fetching and static site generation
   - Priority: Critical
   - Dependencies: None
@@ -25,6 +27,7 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Requirements File: [REQ-003-public-playback.md](docs/requirements/REQ-003-public-playback.md)
 
 ### Enhancements - Improved User Experience
+
 - [ ] **ENH-001**: Improved audio player experience using YouTube IFrame Player API
   - Priority: High
   - Dependencies: CF-003
@@ -38,6 +41,7 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Requirements File: [REQ-005-unified-audio-player-ux-v2.md](docs/requirements/REQ-005-unified-audio-player-ux-v2.md)
 
 ### Documentation - Project Documentation and Decisions
+
 - [ ] **DOC-002**: ADR for improved architecture and tech stack (React, Material UI, standard tooling)
   - Priority: High
   - Dependencies: None
@@ -46,8 +50,8 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 
 ## Completed Items
 
-
 ## Notes & Decisions
+
 - Playlists are public; no authentication required.
 - Site updates once per week to minimize API calls.
 - Improved player experience will use the YouTube IFrame Player API with custom controls and hidden video area.
@@ -58,6 +62,7 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 ## Migration Plan - React, Material UI, and Standard Tooling
 
 ### Infrastructure
+
 - [ ] **INF-001**: Set up new React project with Vite (or Create React App)
   - Priority: Critical
   - Dependencies: None
@@ -75,6 +80,7 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Requirements File: (to be created)
 
 ### Core Features Migration
+
 - [ ] **MIG-001**: Migrate static site generation logic to React (consider Next.js for SSR/SSG)
   - Priority: High
   - Dependencies: INF-001
@@ -94,4 +100,4 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Priority: Medium
   - Dependencies: MIG-002
   - Status: Not Started
-  - Requirements File: (to be created) 
+  - Requirements File: (to be created)

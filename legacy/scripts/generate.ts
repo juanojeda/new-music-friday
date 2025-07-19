@@ -7,9 +7,8 @@ dotenv.config();
 
 function writePlayerSetupScript(playlists: Playlist[], outDir: string) {
   // Prepare playlist data for JS
-  const playlistData = JSON.stringify(playlists.map(p => ({ id: p.id, name: p.name })));
-  const script =
-`const playlists = ${playlistData};
+  const playlistData = JSON.stringify(playlists.map((p) => ({ id: p.id, name: p.name })));
+  const script = `const playlists = ${playlistData};
 let player = null;
 let currentPlaylistIdx = 0;
 let currentTrackTitle = '';
@@ -130,4 +129,4 @@ async function main() {
 main().catch((err) => {
   console.error(err);
   process.exit(1);
-}); 
+});

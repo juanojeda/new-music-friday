@@ -1,9 +1,11 @@
 # REQ-INF-001-react-project-setup.md
 
 ## User Story
+
 As a developer, I want the project to use a standard React setup with Vite (or Create React App) so that the codebase is maintainable, testable, and easy to onboard new contributors.
 
 ## Functional Requirements
+
 - FR-INF-001: Initialize a new React project using Vite (preferred) or Create React App with TypeScript template.
   - Description: The project must be bootstrapped using Vite (preferred) or CRA, configured for TypeScript.
   - Pre-conditions: None.
@@ -46,14 +48,16 @@ As a developer, I want the project to use a standard React setup with Vite (or C
   - Dependencies: FR-INF-001, FR-INF-002
 
 ## Non-Functional Requirements
+
 - NFR-INF-001: The setup must use the latest stable versions of React, Vite (or CRA), and TypeScript.
 - NFR-INF-002: The project must be able to run locally on macOS and Linux.
 
 ## Technical Guidance
+
 - Use Vite with the React + TypeScript template: `npm create vite@latest . -- --template react-ts` (note the use of `.` to scaffold in the root directory)
 - If Vite is not feasible, use Create React App: `npx create-react-app . --template typescript`
 - Do not place the new React app in a subdirectory; it must be at the project root.
 - Move all legacy code to a `legacy/` directory at the root during migration. Do not delete legacy code until all features are migrated and tested.
 - Remove or migrate any legacy code as part of the migration process, only after successful verification.
 - Ensure the project can be started with `npm run dev` or equivalent
-- Do not include unnecessary boilerplate code 
+- Do not include unnecessary boilerplate code

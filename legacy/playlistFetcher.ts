@@ -7,19 +7,25 @@ export interface Playlist {
 }
 
 function filterByNamePrefix(playlists: Playlist[], prefix: string): Playlist[] {
-  return playlists.filter(p => p.name.startsWith(prefix));
+  return playlists.filter((p) => p.name.startsWith(prefix));
 }
 
 /**
  * Fetches all playlists and filters to those whose names start with 'New Music Friday'.
  * @param fetcher - A function that returns a Promise resolving to an array of Playlist objects.
  */
-export async function fetchNewMusicFridayPlaylists(fetcher: () => Promise<Playlist[]>): Promise<Playlist[]> {
+export async function fetchNewMusicFridayPlaylists(
+  fetcher: () => Promise<Playlist[]>,
+): Promise<Playlist[]> {
   const playlists = await fetcher();
   return filterByNamePrefix(playlists, 'New Music Friday');
 }
 
-export async function fetchYouTubeMusicPlaylists(opts: { apiKey: string; channelId: string; namePrefix: string }): Promise<Playlist[]> {
+export async function fetchYouTubeMusicPlaylists(opts: {
+  apiKey: string;
+  channelId: string;
+  namePrefix: string;
+}): Promise<Playlist[]> {
   const { apiKey, channelId, namePrefix } = opts;
   let playlists: Playlist[] = [];
   let nextPageToken: string | undefined = undefined;
@@ -65,7 +71,7 @@ function renderUnifiedAudioPlayer(): string {
 function renderPlaylistList(playlists: Playlist[]): string {
   return `
     <ul class="playlist-list">
-      ${playlists.map(p => `<li><button data-playlist-id="${p.id}">${p.name}</button></li>`).join('')}
+      ${playlists.map((p) => `<li><button data-playlist-id="${p.id}">${p.name}</button></li>`).join('')}
     </ul>
   `;
 }
@@ -91,4 +97,4 @@ export function generatePlaylistHtml(playlists: Playlist[]): string {
     ${renderUnifiedAudioPlayer()}
   </body>
 </html>`;
-} 
+}

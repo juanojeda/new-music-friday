@@ -1,6 +1,7 @@
 # REQ-002: Playlist Display Sorting
 
 ## User Story
+
 As a visitor, I want to see the most recently created "New Music Friday" playlists at the top of the page, so that I can easily access the latest music.
 
 ## Functional Requirements
@@ -26,6 +27,7 @@ As a visitor, I want to see the most recently created "New Music Friday" playlis
   - Metrics/Thresholds: Users can identify the newest playlist at a glance.
 
 ## Technical Specifications & Guidance
+
 - Ensure playlist data includes creation date metadata.
 - Use a stable sorting algorithm to order playlists.
-- Clearly indicate the order (e.g., label, visual cue). 
+- Clearly indicate the order (e.g., label, visual cue).

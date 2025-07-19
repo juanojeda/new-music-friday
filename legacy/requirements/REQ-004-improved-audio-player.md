@@ -1,6 +1,7 @@
 # REQ-004: Improved Audio Player Experience (YouTube IFrame Player API)
 
 ## User Story
+
 As a visitor, I want the playlist player to look and behave like an audio player (not a video player), so that the experience matches the audio-only content and provides intuitive controls.
 
 ## Functional Requirements
@@ -44,7 +45,8 @@ As a visitor, I want the playlist player to look and behave like an audio player
   - Description: The player UI must be visually clear and intuitive, with no visible video area.
 
 ## Technical Specifications & Guidance
+
 - Use the YouTube IFrame Player API to embed and control the playlist.
 - Hide the video area using CSS (e.g., set height to 0, overflow hidden, or overlay a static image).
 - Implement custom controls in HTML/JS and wire them to the YouTube API methods.
-- Ensure the player works on both desktop and mobile browsers. 
+- Ensure the player works on both desktop and mobile browsers.

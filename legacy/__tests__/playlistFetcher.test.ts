@@ -22,4 +22,4 @@ describe('fetchNewMusicFridayPlaylists', () => {
       { id: '3', name: 'New Music Friday - 2024-05-31', publishedAt: '2024-05-31T12:00:00Z' },
     ]);
   });
-}); 
+});

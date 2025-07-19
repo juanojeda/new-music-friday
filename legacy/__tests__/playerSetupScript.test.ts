@@ -14,7 +14,8 @@ describe('player-setup.js', () => {
     const scriptPath = path.resolve(__dirname, '../../dist/player-setup.js');
     const script = fs.readFileSync(scriptPath, 'utf8');
     // Look for the playlist selection handler logic
-    const expected = /loadPlaylist\(\{\s*list: playlists\[idx\]\.id \}\);[\s\S]{0,100}playVideo\(\)/m;
+    const expected =
+      /loadPlaylist\(\{\s*list: playlists\[idx\]\.id \}\);[\s\S]{0,100}playVideo\(\)/m;
     expect(script).toMatch(expected);
   });
-}); 
+});

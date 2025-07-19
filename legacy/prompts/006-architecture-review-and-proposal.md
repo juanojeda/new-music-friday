@@ -1,4 +1,5 @@
 As the software engineer, review the architecture of this project, and propose a structure that will be:
+
 - simple to maintain
 - easy to understand
 - idiomatic for typescript

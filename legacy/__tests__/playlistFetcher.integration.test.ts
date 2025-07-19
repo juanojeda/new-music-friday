@@ -8,7 +8,11 @@ describe('fetchYouTubeMusicPlaylists (integration)', () => {
     const channelId = process.env.YOUTUBE_CHANNEL_ID;
     if (!apiKey || !channelId) throw new Error('Missing API key or channel ID in .env');
 
-    const playlists: Playlist[] = await fetchYouTubeMusicPlaylists({ apiKey, channelId, namePrefix: 'New Music Friday' });
+    const playlists: Playlist[] = await fetchYouTubeMusicPlaylists({
+      apiKey,
+      channelId,
+      namePrefix: 'New Music Friday',
+    });
 
     expect(Array.isArray(playlists)).toBe(true);
     expect(playlists.length).toBeGreaterThan(0);
@@ -17,4 +21,4 @@ describe('fetchYouTubeMusicPlaylists (integration)', () => {
       expect(typeof playlist.id).toBe('string');
     }
   });
-}); 
+});

@@ -1,6 +1,7 @@
 # REQ-001: Weekly Playlist Fetching and Static Site Generation
 
 ## User Story
+
 As a music enthusiast, I want the app to automatically fetch and display my public YouTube Music playlists named "New Music Friday" once a week, so that I can easily browse and play the latest playlists without manual updates or excessive API usage.
 
 ## Functional Requirements
@@ -40,8 +41,9 @@ As a music enthusiast, I want the app to automatically fetch and display my publ
   - Metrics/Thresholds: No more than one fetch per week.
 
 ## Technical Specifications & Guidance
+
 - Use a scheduled job (e.g., cron, serverless function) to trigger the weekly fetch.
 - Use YouTube Music API or appropriate scraping method to retrieve playlists.
 - Store playlist data in a format suitable for static site generation (e.g., JSON, Markdown).
 - Trigger static site build/deploy after successful fetch.
-- Ensure error handling for failed fetches (retry, alert, etc.). 
+- Ensure error handling for failed fetches (retry, alert, etc.).

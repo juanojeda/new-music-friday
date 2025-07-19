@@ -33,4 +33,4 @@ describe('generatePlaylistHtml', () => {
     expect(html).toContain('id="current-playlist"');
     expect(html).toContain('id="current-track"');
   });
-}); 
+});

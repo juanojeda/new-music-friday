@@ -1,6 +1,7 @@
 # REQ-003: Public Playback of Playlists
 
 ## User Story
+
 As any visitor, I want to play any "New Music Friday" playlist directly from the site without logging in, so that I can enjoy the music easily.
 
 ## Functional Requirements
@@ -27,6 +28,7 @@ As any visitor, I want to play any "New Music Friday" playlist directly from the
   - Metrics/Thresholds: Controls meet WCAG 2.1 AA standards.
 
 ## Technical Specifications & Guidance
+
 - Use YouTube Music's public playback/embed functionality where possible.
 - Do not require or prompt for user authentication.
-- Ensure playback works on both desktop and mobile browsers. 
+- Ensure playback works on both desktop and mobile browsers.
