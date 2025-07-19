@@ -69,10 +69,12 @@ export function generatePlaylistHtml(playlists: Playlist[]): string {
   <head>
     <title>New Music Friday Playlists</title>
     <script src="https://www.youtube.com/iframe_api"></script>
-    <script>
-      // This script will be filled in with player setup logic in a real implementation
-      // For now, it is a placeholder for the YouTube IFrame Player API usage
-    </script>
+    <script src="player-setup.js"></script>
+    <style>
+      .yt-player { width: 0 !important; height: 0 !important; overflow: hidden !important; }
+      .audio-player { display: flex; align-items: center; gap: 0.5em; margin-bottom: 1em; }
+      .audio-player button, .audio-player input[type=range] { font-size: 1em; }
+    </style>
   </head>
   <body>
     <h1>New Music Friday Playlists</h1>
