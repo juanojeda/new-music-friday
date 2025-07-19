@@ -1,6 +1,6 @@
-const tsParser = (await import('@typescript-eslint/parser')).default;
+const tsParser = require('@typescript-eslint/parser');
 
-export default [
+module.exports = [
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
@@ -9,13 +9,14 @@ export default [
       sourceType: 'module',
     },
     plugins: {
-      '@typescript-eslint': await import('@typescript-eslint/eslint-plugin'),
-      react: await import('eslint-plugin-react'),
-      'react-hooks': await import('eslint-plugin-react-hooks'),
+      '@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
+      react: require('eslint-plugin-react'),
+      'react-hooks': require('eslint-plugin-react-hooks'),
     },
     rules: {
       'react/react-in-jsx-scope': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
     },
     settings: {
       react: {
@@ -23,4 +24,4 @@ export default [
       },
     },
   },
-];
+]; 

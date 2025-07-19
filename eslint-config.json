@@ -1,0 +1,31 @@
+{
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "linterOptions": {
+    "reportUnusedDisableDirectives": 1
+  },
+  "rules": {
+    "react/react-in-jsx-scope": [
+      0
+    ],
+    "@typescript-eslint/explicit-module-boundary-types": [
+      0
+    ]
+  },
+  "plugins": [
+    "@",
+    "@typescript-eslint",
+    "react",
+    "react-hooks:eslint-plugin-react-hooks"
+  ],
+  "language": "@/js",
+  "languageOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2020,
+    "parser": "typescript-eslint/parser@8.37.0",
+    "parserOptions": {}
+  }
+}
