@@ -1,3 +1,5 @@
+import fetch from 'node-fetch';
+
 export interface Playlist {
   id: string;
   name: string;
@@ -10,6 +12,34 @@ export interface Playlist {
 export async function fetchNewMusicFridayPlaylists(fetcher: () => Promise<Playlist[]>): Promise<Playlist[]> {
   const playlists = await fetcher();
   return playlists.filter(p => p.name.startsWith('New Music Friday'));
+}
+
+export async function fetchYouTubeMusicPlaylists(opts: { apiKey: string; channelId: string; namePrefix: string }): Promise<Playlist[]> {
+  const { apiKey, channelId, namePrefix } = opts;
+  let playlists: Playlist[] = [];
+  let nextPageToken: string | undefined = undefined;
+
+  do {
+    const url = new URL('https://www.googleapis.com/youtube/v3/playlists');
+    url.searchParams.set('part', 'snippet');
+    url.searchParams.set('channelId', channelId);
+    url.searchParams.set('maxResults', '50');
+    url.searchParams.set('key', apiKey);
+    if (nextPageToken) url.searchParams.set('pageToken', nextPageToken);
+
+    const res = await fetch(url.toString());
+    if (!res.ok) throw new Error(`YouTube API error: ${res.status} ${res.statusText}`);
+    const data = await res.json();
+
+    const fetched = (data.items || []).map((item: any) => ({
+      id: item.id,
+      name: item.snippet.title,
+    }));
+    playlists = playlists.concat(fetched);
+    nextPageToken = data.nextPageToken;
+  } while (nextPageToken);
+
+  return playlists.filter(p => p.name.startsWith(namePrefix));
 }
 
 function renderPlaylistListItems(playlists: Playlist[]): string {
