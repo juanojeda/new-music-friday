@@ -6,13 +6,17 @@ export interface Playlist {
   publishedAt: string; // ISO date string
 }
 
+function filterByNamePrefix(playlists: Playlist[], prefix: string): Playlist[] {
+  return playlists.filter(p => p.name.startsWith(prefix));
+}
+
 /**
  * Fetches all playlists and filters to those whose names start with 'New Music Friday'.
  * @param fetcher - A function that returns a Promise resolving to an array of Playlist objects.
  */
 export async function fetchNewMusicFridayPlaylists(fetcher: () => Promise<Playlist[]>): Promise<Playlist[]> {
   const playlists = await fetcher();
-  return playlists.filter(p => p.name.startsWith('New Music Friday'));
+  return filterByNamePrefix(playlists, 'New Music Friday');
 }
 
 export async function fetchYouTubeMusicPlaylists(opts: { apiKey: string; channelId: string; namePrefix: string }): Promise<Playlist[]> {
@@ -41,7 +45,7 @@ export async function fetchYouTubeMusicPlaylists(opts: { apiKey: string; channel
     nextPageToken = data.nextPageToken;
   } while (nextPageToken);
 
-  return playlists.filter(p => p.name.startsWith(namePrefix));
+  return filterByNamePrefix(playlists, namePrefix);
 }
 
 function renderPlaylistListItems(playlists: Playlist[]): string {
