@@ -52,6 +52,7 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 
 - MIG-001: Migrate static site generation logic to React (consider Next.js for SSR/SSG) — 2025-07-19
 - INF-003: Set up ESLint, Prettier, and TypeScript config for React — 2025-07-19
+- INF-002: Integrate Material UI and configure theme — 2025-07-19
 
 ## Notes & Decisions
 
@@ -71,11 +72,11 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Dependencies: None
   - Status: In Progress
   - Requirements File: [REQ-INF-001-react-project-setup.md](docs/requirements/REQ-INF-001-react-project-setup.md)
-- [ ] **INF-002**: Integrate Material UI and configure theme
+- [x] **INF-002**: Integrate Material UI and configure theme
   - Priority: High
   - Dependencies: INF-001
-  - Status: Not Started
-  - Requirements File: (to be created)
+  - Status: Completed
+  - Requirements File: [REQ-INF-002-material-ui-theme.md](docs/requirements/REQ-INF-002-material-ui-theme.md)
 - [x] **INF-003**: Set up ESLint, Prettier, and TypeScript config for React
   - Priority: High
   - Dependencies: INF-001
