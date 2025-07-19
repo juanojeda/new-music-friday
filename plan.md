@@ -50,6 +50,8 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 
 ## Completed Items
 
+- MIG-001: Migrate static site generation logic to React (consider Next.js for SSR/SSG) — 2025-07-19
+
 ## Notes & Decisions
 
 - Playlists are public; no authentication required.
@@ -81,11 +83,11 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 
 ### Core Features Migration
 
-- [ ] **MIG-001**: Migrate static site generation logic to React (consider Next.js for SSR/SSG)
+- [x] **MIG-001**: Migrate static site generation logic to React (consider Next.js for SSR/SSG)
   - Priority: High
   - Dependencies: INF-001
-  - Status: Not Started
-  - Requirements File: (to be created)
+  - Status: Completed
+  - Requirements File: [REQ-006-migrate-static-site-generation-to-react.md](docs/requirements/REQ-006-migrate-static-site-generation-to-react.md)
 - [ ] **MIG-002**: Rebuild audio player and playlist UI as React components using Material UI
   - Priority: High
   - Dependencies: MIG-001, INF-002
