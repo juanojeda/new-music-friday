@@ -1,17 +1,12 @@
 import './App.css';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Button from '@mui/material/Button';
+import PlaylistList from './PlaylistList';
 
 function App() {
   const theme = createTheme();
   return (
     <ThemeProvider theme={theme}>
-      <div>
-        <h1>Vite + React + Material UI</h1>
-        <Button variant="contained" color="primary">
-          Hello MUI
-        </Button>
-      </div>
+      <PlaylistList />
     </ThemeProvider>
   );
 }

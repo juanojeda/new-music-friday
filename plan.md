@@ -94,7 +94,7 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Priority: High
   - Dependencies: MIG-001, INF-002
   - Status: Not Started
-  - Requirements File: (to be created)
+  - Requirements File: [REQ-MIG-002-audio-player-playlist-ui.md](docs/requirements/REQ-MIG-002-audio-player-playlist-ui.md)
 - [ ] **MIG-003**: Write tests for all new React components (React Testing Library, Jest)
   - Priority: High
   - Dependencies: MIG-002
