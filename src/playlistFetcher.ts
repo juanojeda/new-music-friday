@@ -48,19 +48,26 @@ export async function fetchYouTubeMusicPlaylists(opts: { apiKey: string; channel
   return filterByNamePrefix(playlists, namePrefix);
 }
 
-function renderPlaylistListItems(playlists: Playlist[]): string {
-  return playlists.map((p, i) => `
-    <li id="${p.id}">
-      <div>${p.name}</div>
-      <div class="audio-player" id="audio-player-${i}">
-        <button class="play" aria-label="Play/Pause">Play</button>
-        <button class="prev" aria-label="Previous">Prev</button>
-        <button class="next" aria-label="Next">Next</button>
-        <input type="range" class="seek" min="0" max="100" value="0" aria-label="Seek" />
-      </div>
-      <div class="yt-player" id="yt-player-${i}" style="width:0;height:0;overflow:hidden;"></div>
-    </li>
-  `).join('\n      ');
+function renderUnifiedAudioPlayer(): string {
+  return `
+    <div class="audio-player">
+      <div id="current-playlist"></div>
+      <div id="current-track"></div>
+      <button class="play" aria-label="Play/Pause">Play</button>
+      <button class="prev" aria-label="Previous">Prev</button>
+      <button class="next" aria-label="Next">Next</button>
+      <input type="range" class="seek" min="0" max="100" value="0" aria-label="Seek" />
+      <div class="yt-player" id="yt-player" style="width:0;height:0;overflow:hidden;"></div>
+    </div>
+  `;
+}
+
+function renderPlaylistList(playlists: Playlist[]): string {
+  return `
+    <ul class="playlist-list">
+      ${playlists.map(p => `<li><button data-playlist-id="${p.id}">${p.name}</button></li>`).join('')}
+    </ul>
+  `;
 }
 
 export function generatePlaylistHtml(playlists: Playlist[]): string {
@@ -74,13 +81,14 @@ export function generatePlaylistHtml(playlists: Playlist[]): string {
       .yt-player { width: 0 !important; height: 0 !important; overflow: hidden !important; }
       .audio-player { display: flex; align-items: center; gap: 0.5em; margin-bottom: 1em; }
       .audio-player button, .audio-player input[type=range] { font-size: 1em; }
+      .playlist-list { margin-bottom: 2em; }
+      .playlist-list button { font-size: 1em; }
     </style>
   </head>
   <body>
     <h1>New Music Friday Playlists</h1>
-    <ul>
-      ${renderPlaylistListItems(playlists)}
-    </ul>
+    ${renderPlaylistList(playlists)}
+    ${renderUnifiedAudioPlayer()}
   </body>
 </html>`;
 } 
