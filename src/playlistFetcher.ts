@@ -45,7 +45,20 @@ export async function fetchYouTubeMusicPlaylists(opts: { apiKey: string; channel
 }
 
 function renderPlaylistListItems(playlists: Playlist[]): string {
-  return playlists.map(p => `<li id="${p.id}">${p.name}</li>`).join('\n      ');
+  return playlists.map(p => `
+    <li id="${p.id}">
+      <div>${p.name}</div>
+      <iframe
+        width="400"
+        height="225"
+        src="https://www.youtube.com/embed/videoseries?list=${p.id}"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen
+        title="YouTube Playlist Player"
+      ></iframe>
+    </li>
+  `).join('\n      ');
 }
 
 export function generatePlaylistHtml(playlists: Playlist[]): string {
