@@ -51,6 +51,7 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 ## Completed Items
 
 - MIG-001: Migrate static site generation logic to React (consider Next.js for SSR/SSG) — 2025-07-19
+- INF-003: Set up ESLint, Prettier, and TypeScript config for React — 2025-07-19
 
 ## Notes & Decisions
 
@@ -75,11 +76,11 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Dependencies: INF-001
   - Status: Not Started
   - Requirements File: (to be created)
-- [ ] **INF-003**: Set up ESLint, Prettier, and TypeScript config for React
+- [x] **INF-003**: Set up ESLint, Prettier, and TypeScript config for React
   - Priority: High
   - Dependencies: INF-001
-  - Status: Not Started
-  - Requirements File: (to be created)
+  - Status: Completed
+  - Requirements File: [REQ-INF-003-eslint-prettier-tsconfig.md](docs/requirements/REQ-INF-003-eslint-prettier-tsconfig.md)
 
 ### Core Features Migration
 
