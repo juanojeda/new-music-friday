@@ -1,0 +1,39 @@
+---
+alwaysApply: false
+---
+When the user triggers this rule, the user intends to save the following in a prompts file.
+The AI should save the file in the 'prompts' folder using sequential numbering with a descriptive slug.
+
+Once the AI verifies that the prompt exists in the prompts folder, it should then execute the prompt.
+
+for example, if the user types:
+```
+This is the prompt I want to save
+```
+
+then the AI should save a new file in the prompts folder.
+
+## FILE CONTENTS
+This is the prompt I want to save
+
+## FILE FORMAT
+The file should be a markdown file
+
+## FILE SEQUENTIAL NUMBERING
+The file should be sequentially numbered according to the other files in the prompts folder. For instance if the prompts folder has the following files:
+```
+...
+- 0021-feeding-the-cats.md
+- 0022-feeding-the-dogs.md
+- 0023-feeding-the-cats-part-2.md
+```
+The new prompt file should be numbered `0024-[the-file-name].md`
+
+## FILE NAME
+The file should be named according to:
+- the content and context of the prompt, with a descriptive but concise slug. In the above example, it might be `0024-prompt-to-save.md`
+
+## PROMPT EXECUTION
+- Before executing the prompt, the AI should validate that the prompt exists in the prompts folder
+- If the prompt specifies a cursor-rule to follow (for instance "as the planner" or "as the software-engineer" or something to that effect), the AI should execute following that cursor-rule in context.
+- If there is no cursor-rule or role specified, the AI should announce which role it believes is best, then proceed with execution.
