@@ -12,6 +12,10 @@ export async function fetchNewMusicFridayPlaylists(fetcher: () => Promise<Playli
   return playlists.filter(p => p.name.startsWith('New Music Friday'));
 }
 
+function renderPlaylistListItems(playlists: Playlist[]): string {
+  return playlists.map(p => `<li id="${p.id}">${p.name}</li>`).join('\n      ');
+}
+
 export function generatePlaylistHtml(playlists: Playlist[]): string {
   return `<!DOCTYPE html>
 <html>
@@ -21,7 +25,7 @@ export function generatePlaylistHtml(playlists: Playlist[]): string {
   <body>
     <h1>New Music Friday Playlists</h1>
     <ul>
-      ${playlists.map(p => `<li id="${p.id}">${p.name}</li>`).join('\n      ')}
+      ${renderPlaylistListItems(playlists)}
     </ul>
   </body>
 </html>`;
