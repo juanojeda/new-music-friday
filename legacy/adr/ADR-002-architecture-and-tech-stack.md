@@ -1,10 +1,11 @@
 # 002 - Adopt React, Material UI, and Standard Tooling for Maintainable, Testable Architecture
 
 ## Status
-Proposed
+Accepted
 
 ## Date Log
 2025-07-19 - Proposed
+2025-07-19 - Accepted
 
 ## Context & Problem Statement
 The current application uses string-based HTML generation and vanilla JavaScript for UI, resulting in flakey, hard-to-test, and hard-to-maintain components. The setup is not standard, making debugging and onboarding difficult. There is no use of a modern UI framework, and the tech stack is minimal (TypeScript, Node, Jest, node-fetch).

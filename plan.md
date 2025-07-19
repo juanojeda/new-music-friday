@@ -37,6 +37,13 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Status: Not Started
   - Requirements File: [REQ-005-unified-audio-player-ux-v2.md](docs/requirements/REQ-005-unified-audio-player-ux-v2.md)
 
+### Documentation - Project Documentation and Decisions
+- [ ] **DOC-002**: ADR for improved architecture and tech stack (React, Material UI, standard tooling)
+  - Priority: High
+  - Dependencies: None
+  - Status: Accepted
+  - Requirements File: [ADR-002-architecture-and-tech-stack.md](docs/adr/ADR-002-architecture-and-tech-stack.md)
+
 ## Completed Items
 
 
@@ -44,4 +51,47 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 - Playlists are public; no authentication required.
 - Site updates once per week to minimize API calls.
 - Improved player experience will use the YouTube IFrame Player API with custom controls and hidden video area.
-- Unified audio player UX v2 will provide a single player, playlist selection, and track display. 
+- Unified audio player UX v2 will provide a single player, playlist selection, and track display.
+- The previously referenced architecture-adr.md does not exist; see REQ-006-architecture-adr.md for the current ADR.
+- New ADR (ADR-002) for React, Material UI, and standard tooling is now **accepted**. Migration to this stack is approved and will proceed as planned.
+
+## Migration Plan - React, Material UI, and Standard Tooling
+
+### Infrastructure
+- [ ] **INF-001**: Set up new React project with Vite (or Create React App)
+  - Priority: Critical
+  - Dependencies: None
+  - Status: In Progress
+  - Requirements File: [REQ-INF-001-react-project-setup.md](docs/requirements/REQ-INF-001-react-project-setup.md)
+- [ ] **INF-002**: Integrate Material UI and configure theme
+  - Priority: High
+  - Dependencies: INF-001
+  - Status: Not Started
+  - Requirements File: (to be created)
+- [ ] **INF-003**: Set up ESLint, Prettier, and TypeScript config for React
+  - Priority: High
+  - Dependencies: INF-001
+  - Status: Not Started
+  - Requirements File: (to be created)
+
+### Core Features Migration
+- [ ] **MIG-001**: Migrate static site generation logic to React (consider Next.js for SSR/SSG)
+  - Priority: High
+  - Dependencies: INF-001
+  - Status: Not Started
+  - Requirements File: (to be created)
+- [ ] **MIG-002**: Rebuild audio player and playlist UI as React components using Material UI
+  - Priority: High
+  - Dependencies: MIG-001, INF-002
+  - Status: Not Started
+  - Requirements File: (to be created)
+- [ ] **MIG-003**: Write tests for all new React components (React Testing Library, Jest)
+  - Priority: High
+  - Dependencies: MIG-002
+  - Status: Not Started
+  - Requirements File: (to be created)
+- [ ] **MIG-004**: Gradually phase out old string-template code
+  - Priority: Medium
+  - Dependencies: MIG-002
+  - Status: Not Started
+  - Requirements File: (to be created) 
