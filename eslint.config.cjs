@@ -2,6 +2,9 @@ const tsParser = require('@typescript-eslint/parser');
 
 module.exports = [
   {
+    ignores: ['legacy/**'],
+  },
+  {
     files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
       parser: tsParser,
@@ -24,4 +27,4 @@ module.exports = [
       },
     },
   },
-]; 
+];

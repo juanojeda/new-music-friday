@@ -40,6 +40,7 @@ Chosen option: "Use Vite + React for SSG (current setup)", because it aligns wit
 ### Considered options
 
 #### 1. Use Vite + React for SSG (current setup)
+
 - Use Vite's build process and available plugins for static site generation
 - Keep the current project structure and tooling
 - Generate static HTML at build time for all playlist pages
@@ -47,10 +48,11 @@ Chosen option: "Use Vite + React for SSG (current setup)", because it aligns wit
 - Add SSG logic as needed (e.g., data fetching at build time)
 
 #### 2. Migrate to Next.js for SSR/SSG
+
 - Migrate the project to Next.js (React framework with built-in SSR/SSG)
 - Use Next.js data fetching methods (getStaticProps, getServerSideProps)
 - Gain flexibility for future SSR or API routes
 - Requires significant migration and learning curve
 - More complex build and deployment
 
---- 
+---

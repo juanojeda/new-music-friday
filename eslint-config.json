@@ -8,19 +8,10 @@
     "reportUnusedDisableDirectives": 1
   },
   "rules": {
-    "react/react-in-jsx-scope": [
-      0
-    ],
-    "@typescript-eslint/explicit-module-boundary-types": [
-      0
-    ]
+    "react/react-in-jsx-scope": [0],
+    "@typescript-eslint/explicit-module-boundary-types": [0]
   },
-  "plugins": [
-    "@",
-    "@typescript-eslint",
-    "react",
-    "react-hooks:eslint-plugin-react-hooks"
-  ],
+  "plugins": ["@", "@typescript-eslint", "react", "react-hooks:eslint-plugin-react-hooks"],
   "language": "@/js",
   "languageOptions": {
     "sourceType": "module",
