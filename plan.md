@@ -28,8 +28,14 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 - [ ] **ENH-001**: Improved audio player experience using YouTube IFrame Player API
   - Priority: High
   - Dependencies: CF-003
-  - Status: Not Started
+  - Status: Completed
   - Requirements File: [REQ-004-improved-audio-player.md](docs/requirements/REQ-004-improved-audio-player.md)
+
+- [ ] **ENH-002**: Unified audio player UX v2 (single player, playlist selection, track display)
+  - Priority: High
+  - Dependencies: ENH-001
+  - Status: Not Started
+  - Requirements File: [REQ-005-unified-audio-player-ux-v2.md](docs/requirements/REQ-005-unified-audio-player-ux-v2.md)
 
 ## Completed Items
 
@@ -37,4 +43,5 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 ## Notes & Decisions
 - Playlists are public; no authentication required.
 - Site updates once per week to minimize API calls.
-- Improved player experience will use the YouTube IFrame Player API with custom controls and hidden video area. 
+- Improved player experience will use the YouTube IFrame Player API with custom controls and hidden video area.
+- Unified audio player UX v2 will provide a single player, playlist selection, and track display. 
