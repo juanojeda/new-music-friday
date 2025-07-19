@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 export interface Playlist {
   id: string;
   name: string;
+  publishedAt: string; // ISO date string
 }
 
 /**
@@ -34,6 +35,7 @@ export async function fetchYouTubeMusicPlaylists(opts: { apiKey: string; channel
     const fetched = (data.items || []).map((item: any) => ({
       id: item.id,
       name: item.snippet.title,
+      publishedAt: item.snippet.publishedAt,
     }));
     playlists = playlists.concat(fetched);
     nextPageToken = data.nextPageToken;
