@@ -50,7 +50,7 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 
 ## Completed Items
 
-- MIG-001: Migrate static site generation logic to React (consider Next.js for SSR/SSG) — 2025-07-19
+- INF-001: Set up new React project with Vite (or Create React App) — 2025-07-19
 - INF-003: Set up ESLint, Prettier, and TypeScript config for React — 2025-07-19
 - INF-002: Integrate Material UI and configure theme — 2025-07-19
 
@@ -67,10 +67,10 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 
 ### Infrastructure
 
-- [ ] **INF-001**: Set up new React project with Vite (or Create React App)
+- [x] **INF-001**: Set up new React project with Vite (or Create React App)
   - Priority: Critical
   - Dependencies: None
-  - Status: In Progress
+  - Status: Completed
   - Requirements File: [REQ-INF-001-react-project-setup.md](docs/requirements/REQ-INF-001-react-project-setup.md)
 - [x] **INF-002**: Integrate Material UI and configure theme
   - Priority: High
