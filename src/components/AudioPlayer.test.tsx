@@ -35,11 +35,21 @@ describe('AudioPlayer', () => {
     delete window.YT;
   });
 
-  it('renders Material UI audio player controls when a playlist is selected', () => {
+  it('renders Material UI audio player controls when a playlist is selected', async () => {
+    let onReadyCallback: (() => void) | undefined;
+    const playerMock = vi.fn((_id, opts) => {
+      onReadyCallback = opts.events.onReady;
+      return { destroy: vi.fn() };
+    });
+    window.YT = { Player: playerMock };
+
     render(<AudioPlayer playlist={mockPlaylist} />);
-    expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /pause/i })).toBeInTheDocument();
-    expect(screen.getByRole('slider', { name: /seek/i })).toBeInTheDocument();
+    // Simulate player ready
+    onReadyCallback && onReadyCallback();
+    // Controls should now be rendered
+    expect(await screen.findByRole('button', { name: /play/i })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /pause/i })).toBeInTheDocument();
+    expect(await screen.findByRole('slider', { name: /seek/i })).toBeInTheDocument();
   });
 
   it('does not render if no playlist is selected', () => {
@@ -65,5 +75,28 @@ describe('AudioPlayer', () => {
     const [containerId, options] = playerMock.mock.calls[0];
     expect(typeof containerId).toBe('string');
     expect(options).toBeDefined();
+  });
+
+  it('renders controls only after player is ready', async () => {
+    let onReadyCallback: (() => void) | undefined;
+    const playerMock = vi.fn((_id, opts) => {
+      onReadyCallback = opts.events.onReady;
+      return { destroy: vi.fn() };
+    });
+    window.YT = { Player: playerMock };
+
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    // Controls should not be rendered before onReady
+    expect(screen.queryByRole('button', { name: /play/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /pause/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('slider', { name: /seek/i })).not.toBeInTheDocument();
+
+    // Simulate player ready
+    onReadyCallback && onReadyCallback();
+
+    // Controls should now be rendered
+    expect(await screen.findByRole('button', { name: /play/i })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /pause/i })).toBeInTheDocument();
+    expect(await screen.findByRole('slider', { name: /seek/i })).toBeInTheDocument();
   });
 });

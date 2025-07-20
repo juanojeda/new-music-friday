@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Playlist } from '../libs/types';
 import { YTPlayer, YTPlayerOptions, YTPlayerConstructor } from '../libs/yt-types';
 import IconButton from '@mui/material/IconButton';
@@ -26,6 +26,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
   const playerDivId = useRef(`yt-player-${Math.random().toString(36).slice(2)}`);
   const playerRef = useRef<YTPlayer | null>(null);
   const latestPlaylistRef = useRef<Playlist | null>(playlist);
+  const [playerReady, setPlayerReady] = useState(false);
 
   // Always keep latest playlist in ref
   useEffect(() => {
@@ -53,7 +54,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
           width: '0',
           playerVars: { listType: 'playlist', list: current.id },
           events: {
-            onReady: () => {},
+            onReady: () => setPlayerReady(true),
           },
         } as YTPlayerOptions,
       );
@@ -74,6 +75,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
         playerRef.current.destroy?.();
         playerRef.current = null;
       }
+      setPlayerReady(false);
     };
   }, [playlist]);
 
@@ -81,13 +83,17 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
   return (
     <div>
       <div id={playerDivId.current} />
-      <IconButton aria-label="play">
-        <PlayArrowIcon />
-      </IconButton>
-      <IconButton aria-label="pause">
-        <PauseIcon />
-      </IconButton>
-      <Slider aria-label="seek" />
+      {playerReady && (
+        <>
+          <IconButton aria-label="play">
+            <PlayArrowIcon />
+          </IconButton>
+          <IconButton aria-label="pause">
+            <PauseIcon />
+          </IconButton>
+          <Slider aria-label="seek" />
+        </>
+      )}
     </div>
   );
 };

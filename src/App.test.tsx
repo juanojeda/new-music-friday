@@ -36,17 +36,29 @@ describe('App', () => {
   });
 
   it('renders AudioPlayer when a playlist is selected', async () => {
+    // Mock window.YT.Player to capture onReady
+    let onReadyCallback: (() => void) | undefined;
+    window.YT = {
+      Player: vi.fn((_id, opts) => {
+        onReadyCallback = opts.events.onReady;
+        return { destroy: vi.fn() };
+      }),
+    };
+
     render(<App />);
-    await waitFor(() => {
-      expect(screen.getByText('New Music Friday - 2024-06-07')).toBeInTheDocument();
-    });
-    const firstPlaylistButton = screen.getAllByRole('button', {
-      name: 'New Music Friday - 2024-06-07',
-    })[0];
+    // Wait for playlists to load
+    await waitFor(() =>
+      expect(screen.getByText(/New Music Friday - 2024-06-07/)).toBeInTheDocument(),
+    );
+    // Click the first playlist
+    const firstPlaylistButton = screen.getAllByRole('button', { name: /New Music Friday/ })[0];
     fireEvent.click(firstPlaylistButton);
-    expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /pause/i })).toBeInTheDocument();
-    expect(screen.getByRole('slider', { name: /seek/i })).toBeInTheDocument();
+    // Simulate player ready
+    onReadyCallback && onReadyCallback();
+    // Controls should now be rendered
+    expect(await screen.findByRole('button', { name: /play/i })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /pause/i })).toBeInTheDocument();
+    expect(await screen.findByRole('slider', { name: /seek/i })).toBeInTheDocument();
   });
 
   it('does not render AudioPlayer when no playlist is selected', async () => {
