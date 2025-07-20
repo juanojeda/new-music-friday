@@ -100,7 +100,7 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
     - [x] Allow user to select a playlist and highlight selection
     - [x] Pass selected playlist to parent component (App) via callback
     - [x] Render a unified audio player using Material UI (integrated and tested in App)
-    - [ ] Integrate with YouTube IFrame Player API for playback
+    - [x] Integrate with YouTube IFrame Player API for playback
     - [ ] Play, pause, and seek controls for audio player
     - [ ] Hide video area of YouTube player
     - [ ] Ensure full accessibility (keyboard navigation, ARIA labels)
@@ -117,3 +117,15 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Dependencies: MIG-002
   - Status: Not Started
   - Requirements File: (to be created)
+- [ ] **MIG-005**: YouTube AudioPlayer Integration and Controlled Playlist Selection
+  - Priority: High
+  - Dependencies: MIG-002
+  - Status: Not Started
+  - Requirements File: [REQ-MIG-005-youtube-player-integration.md](docs/requirements/REQ-MIG-005-youtube-player-integration.md)
+  - Atomic Tasks:
+    - [ ] Implement controlled AudioPlayer: App tracks selection, passes playlist as prop
+    - [ ] AudioPlayer loads YouTube IFrame API and creates player if not present
+    - [ ] Render controls only when player is ready
+    - [ ] On playlist change, call loadPlaylist on existing player (do not recreate)
+    - [ ] Ensure no memory leaks or duplicate players
+    - [ ] Add tests for all above behaviors
