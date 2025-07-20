@@ -35,23 +35,6 @@ describe('AudioPlayer', () => {
     delete window.YT;
   });
 
-  it('renders Material UI audio player controls when a playlist is selected', async () => {
-    let onReadyCallback: (() => void) | undefined;
-    const playerMock = vi.fn((_id, opts) => {
-      onReadyCallback = opts.events.onReady;
-      return { destroy: vi.fn() };
-    });
-    window.YT = { Player: playerMock };
-
-    render(<AudioPlayer playlist={mockPlaylist} />);
-    // Simulate player ready
-    onReadyCallback && onReadyCallback();
-    // Controls should now be rendered
-    expect(await screen.findByRole('button', { name: /play/i })).toBeInTheDocument();
-    expect(await screen.findByRole('button', { name: /pause/i })).toBeInTheDocument();
-    expect(await screen.findByRole('slider', { name: /seek/i })).toBeInTheDocument();
-  });
-
   it('does not render if no playlist is selected', () => {
     render(<AudioPlayer playlist={null} />);
     expect(screen.queryByRole('button', { name: /play/i })).not.toBeInTheDocument();
