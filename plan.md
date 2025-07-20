@@ -62,6 +62,7 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 - Unified audio player UX v2 will provide a single player, playlist selection, and track display.
 - The previously referenced architecture-adr.md does not exist; see REQ-006-architecture-adr.md for the current ADR.
 - New ADR (ADR-002) for React, Material UI, and standard tooling is now **accepted**. Migration to this stack is approved and will proceed as planned.
+- All audio player controls (play, pause, seek) are now fully keyboard accessible and have ARIA labels. The media seeker supports jumping ±5s with arrow keys for improved accessibility.
 
 ## Migration Plan - React, Material UI, and Standard Tooling
 
@@ -103,8 +104,8 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
     - [x] Integrate with YouTube IFrame Player API for playback
     - [x] Play, pause, and seek controls for audio player
     - [x] Hide video area of YouTube player
-    - [ ] Ensure full accessibility (keyboard navigation, ARIA labels)
-    - [ ] Ensure responsive design for mobile and desktop
+    - [x] Ensure full accessibility (keyboard navigation, ARIA labels)
+    - [x] Ensure responsive design for mobile and desktop
     - [ ] Display playlist thumbnails in the list
     - [ ] Handle API errors gracefully and provide user feedback
 - [ ] **MIG-003**: Write tests for all new React components (React Testing Library, Jest)
