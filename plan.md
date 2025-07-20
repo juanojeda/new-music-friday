@@ -95,7 +95,18 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Dependencies: MIG-001, INF-002
   - Status: In Progress
   - Requirements File: [REQ-MIG-002-audio-player-playlist-ui.md](docs/requirements/REQ-MIG-002-audio-player-playlist-ui.md)
-  - Notes: PlaylistList component fetches from static playlists.nmf.json (SSG), integrated and tested in App. Next: playlist selection, thumbnails, audio player integration.
+  - Atomic Tasks:
+    - [x] Display a list of available playlists fetched from the API (static JSON for now)
+    - [x] Allow user to select a playlist and highlight selection
+    - [ ] Pass selected playlist to parent component (App) via callback
+    - [ ] Display playlist thumbnails in the list
+    - [ ] Render a unified audio player using Material UI
+    - [ ] Integrate with YouTube IFrame Player API for playback
+    - [ ] Play, pause, and seek controls for audio player
+    - [ ] Hide video area of YouTube player
+    - [ ] Ensure full accessibility (keyboard navigation, ARIA labels)
+    - [ ] Ensure responsive design for mobile and desktop
+    - [ ] Handle API errors gracefully and provide user feedback
 - [ ] **MIG-003**: Write tests for all new React components (React Testing Library, Jest)
   - Priority: High
   - Dependencies: MIG-002
