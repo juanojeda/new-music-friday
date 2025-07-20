@@ -1,14 +1,16 @@
 I want to be able to use Material UI 3's dynamic colours based on the unique artwork of the playlist.
 
 The way I see this working is:
+
 - When the playlists are fetched, the ID of the playlist is used to generate a unique artwork (using the jdenticon library)
 - Using that artwork, identify the primary colour or colours used, and save that as part of the json playlist payload
 - When the playlist is selected, use that as the primary.main colour of the theme and apply it to the app (this is assuming that MUI's createTheme will dynamically generate the rest of the theme based on primary.main)
 
 ## Questions
+
 - Does createTheme generate a whole theme based on primary.main?
 - If not, how else can we use just 1 colour to generate a cohesive theme?
-- How can we dynamically transition between themes when a playlist is selected? 
+- How can we dynamically transition between themes when a playlist is selected?
 - How will we extract the dominant color from the jdenticon album art?
 
 ---
@@ -16,17 +18,20 @@ The way I see this working is:
 ## Answers & Technical Guidance
 
 ### 1. Does createTheme generate a whole theme based on primary.main?
+
 - **No, not fully.**
   - `createTheme` in Material UI (v5, Material Design 2) lets you specify `primary.main`, but it does not auto-generate a full palette (shades, contrast, etc.) from just that color. You must provide additional palette values if you want a richer theme.
   - Material UI does not natively support Material Design 3 (M3) dynamic color schemes out of the box. M3-style dynamic palette generation requires extra libraries or custom logic.
 
 ### 2. If not, how else can we use just 1 colour to generate a cohesive theme?
+
 - **Options:**
   - **Manual Palette Generation:** Use color utilities (e.g., `color`, `chroma-js`) to generate lighter/darker shades and contrast text from your primary color, then pass those into `createTheme`.
   - **Community Libraries:** Use libraries like [`@mui/material-color-utilities`](https://github.com/material-foundation/material-color-utilities) or [`material-you-color`](https://www.npmjs.com/package/material-you-color) to generate a Material Design 3 palette from a single color.
   - **Custom Algorithm:** Extract the dominant color from the artwork (e.g., with `color-thief` or `node-vibrant`), then use that as the seed for palette generation.
 
 ### 3. How can we dynamically transition between themes when a playlist is selected?
+
 - **Approach:**
   - Store the generated theme (or at least the primary color) for each playlist.
   - When a playlist is selected, update the theme in your React state/context and pass it to the `ThemeProvider`.
@@ -39,6 +44,7 @@ The way I see this working is:
     ```
 
 ### 4. How will we extract the dominant color from the jdenticon album art?
+
 - **Approach:**
   - `jdenticon` generates SVG artwork based on a hash (e.g., playlist ID). To extract the dominant color:
     1. **Render the SVG to a Canvas:** Use a library like `@svgdotjs/svg.js` or render the SVG in a hidden `<canvas>` element in the browser.
@@ -50,8 +56,9 @@ The way I see this working is:
 ---
 
 **Next Steps / Recommendations:**
+
 1. Use `jdenticon` to generate SVG artwork for each playlist.
 2. Extract the dominant color from the SVG using a color extraction library.
 3. Generate a full palette from the dominant color (using a utility or library).
 4. Update the MUI theme dynamically when a playlist is selected.
-5. Add CSS or animation for smooth theme transitions. 
+5. Add CSS or animation for smooth theme transitions.
