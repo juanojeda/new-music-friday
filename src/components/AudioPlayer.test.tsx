@@ -4,6 +4,7 @@ import React from 'react';
 import AudioPlayer from './AudioPlayer';
 import { Playlist } from '../libs/types';
 import { YTPlayerConstructor } from '../libs/yt-types';
+import { fireEvent } from '@testing-library/react';
 
 const mockPlaylist: Playlist = {
   id: '1',
@@ -81,5 +82,41 @@ describe('AudioPlayer', () => {
     expect(await screen.findByRole('button', { name: /play/i })).toBeInTheDocument();
     expect(await screen.findByRole('button', { name: /pause/i })).toBeInTheDocument();
     expect(await screen.findByRole('slider', { name: /seek/i })).toBeInTheDocument();
+  });
+
+  it('calls playVideo, pauseVideo, and seekTo on the player when controls are used', async () => {
+    let onReadyCallback: (() => void) | undefined;
+    const playVideo = vi.fn();
+    const pauseVideo = vi.fn();
+    const seekTo = vi.fn();
+    const playerMock = vi.fn((_id, opts) => {
+      onReadyCallback = opts.events.onReady;
+      return { destroy: vi.fn(), playVideo, pauseVideo, seekTo };
+    });
+    window.YT = { Player: playerMock };
+
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    // Simulate player ready
+    onReadyCallback && onReadyCallback();
+
+    // Play
+    const playButton = await screen.findByRole('button', { name: /play/i });
+    playButton && playButton.click();
+    expect(playVideo).toHaveBeenCalled();
+
+    // Pause
+    const pauseButton = await screen.findByRole('button', { name: /pause/i });
+    pauseButton && pauseButton.click();
+    expect(pauseVideo).toHaveBeenCalled();
+
+    // Seek
+    const slider = await screen.findByRole('slider', { name: /seek/i });
+    // Simulate a value change
+    // @ts-ignore: value is not in the type for Slider, but is supported by MUI
+    slider && slider.focus();
+    slider && slider.setAttribute('value', '42');
+    // fireEvent.change will pass the value as the second argument to onChange
+    fireEvent.change(slider, { target: { value: 42 } });
+    expect(seekTo).toHaveBeenCalledWith(42, true);
   });
 });
