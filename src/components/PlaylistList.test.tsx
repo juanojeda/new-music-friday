@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach, Mock } from 'vitest';
 import { render, screen, waitFor, cleanup, fireEvent } from '@testing-library/react';
 import React from 'react';
 import PlaylistList from './PlaylistList';
@@ -23,8 +23,8 @@ global.fetch = vi.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve(mockPlaylists),
-  }),
-) as any;
+  })
+) as unknown as typeof fetch;
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -44,7 +44,7 @@ describe('PlaylistList', () => {
   });
 
   it('shows an error message if the API call fails', async () => {
-    (global.fetch as any).mockImplementationOnce(() => Promise.resolve({ ok: false }));
+    (global.fetch as Mock).mockImplementationOnce(() => Promise.resolve({ ok: false }));
     render(<PlaylistList />);
     await waitFor(() => {
       expect(screen.getByText(/failed to load playlists/i)).toBeInTheDocument();

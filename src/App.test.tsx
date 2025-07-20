@@ -23,8 +23,8 @@ global.fetch = vi.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve(mockPlaylists),
-  }),
-) as any;
+  })
+) as unknown as typeof fetch;
 
 describe('App', () => {
   it('renders PlaylistList and displays playlists', async () => {
