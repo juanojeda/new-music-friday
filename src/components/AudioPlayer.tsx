@@ -1,27 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { Playlist } from '../libs/types';
+import { YTPlayer, YTPlayerOptions, YTPlayerConstructor } from '../libs/yt-types';
 import IconButton from '@mui/material/IconButton';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import Slider from '@mui/material/Slider';
-
-// Minimal YouTube IFrame API types for local use
-interface YTPlayer {
-  destroy?: () => void;
-}
-interface YTPlayerOptions {
-  height: string;
-  width: string;
-  playerVars: { listType: string; list: string };
-  events: { onReady: () => void };
-}
-type YTPlayerConstructor = new (elementId: string, options: YTPlayerOptions) => YTPlayer;
-declare global {
-  interface Window {
-    YT?: { Player: YTPlayerConstructor };
-    onYouTubeIframeAPIReady?: () => void;
-  }
-}
 
 interface AudioPlayerProps {
   playlist: Playlist | null;
@@ -63,18 +46,21 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
       if (playerRef.current) return;
       const current = latestPlaylistRef.current;
       if (!current) return;
-      playerRef.current = new window.YT!.Player(playerDivId.current, {
-        height: '0',
-        width: '0',
-        playerVars: { listType: 'playlist', list: current.id },
-        events: {
-          onReady: () => {},
-        },
-      });
+      playerRef.current = new (window as Window & typeof globalThis).YT!.Player(
+        playerDivId.current,
+        {
+          height: '0',
+          width: '0',
+          playerVars: { listType: 'playlist', list: current.id },
+          events: {
+            onReady: () => {},
+          },
+        } as YTPlayerOptions,
+      );
     }
     // Set up the callback only once
-    if (!window.onYouTubeIframeAPIReady) {
-      window.onYouTubeIframeAPIReady = () => {
+    if (!(window as Window & typeof globalThis).onYouTubeIframeAPIReady) {
+      (window as Window & typeof globalThis).onYouTubeIframeAPIReady = () => {
         createPlayerForCurrentPlaylist();
       };
     }
