@@ -28,7 +28,7 @@ function App() {
       });
   }, []);
 
-  const selectedPlaylist = playlists.find(p => p.id === selectedId) || null;
+  const selectedPlaylist = playlists.find((p) => p.id === selectedId) || null;
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Failed to load playlists.</div>;
@@ -39,7 +39,7 @@ function App() {
       <PlaylistList
         playlists={playlists}
         selectedId={selectedId}
-        onSelect={playlist => setSelectedId(playlist.id)}
+        onSelect={(playlist) => setSelectedId(playlist.id)}
       />
     </ThemeProvider>
   );

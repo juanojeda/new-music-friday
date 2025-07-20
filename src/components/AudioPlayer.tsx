@@ -13,6 +13,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
   if (!playlist) return null;
   return (
     <div>
+      <iframe
+        title="YouTube Player"
+        src={`https://www.youtube.com/embed/${playlist.id}`}
+        style={{ display: 'none' }}
+        allow="autoplay"
+        data-testid="youtube-iframe"
+      />
       <IconButton aria-label="play">
         <PlayArrowIcon />
       </IconButton>
@@ -24,4 +31,4 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
   );
 };
 
-export default AudioPlayer; 
+export default AudioPlayer;

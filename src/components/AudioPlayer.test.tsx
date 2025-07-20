@@ -23,4 +23,15 @@ describe('AudioPlayer', () => {
     render(<AudioPlayer playlist={null} />);
     expect(screen.queryByRole('button', { name: /play/i })).not.toBeInTheDocument();
   });
-}); 
+
+  it('renders a hidden YouTube iframe with the correct playlist ID when a playlist is selected', () => {
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    const iframe = screen.getByTitle('YouTube Player');
+    expect(iframe).toBeInTheDocument();
+    expect(iframe).toHaveAttribute(
+      'src',
+      expect.stringContaining(`youtube.com/embed/${mockPlaylist.id}`),
+    );
+    expect(iframe).toHaveStyle({ display: 'none' });
+  });
+});
