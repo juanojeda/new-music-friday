@@ -2,13 +2,7 @@ import React, { useEffect, useState } from 'react';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import PlaylistListItem from './PlaylistListItem';
-
-interface Playlist {
-  id: string;
-  name: string;
-  publishedAt: string;
-  thumbnail: string;
-}
+import { Playlist } from '../libs/types';
 
 const PlaylistList: React.FC = () => {
   const [playlists, setPlaylists] = useState<Playlist[] | null>(null);

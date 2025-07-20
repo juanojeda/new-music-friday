@@ -2,8 +2,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, cleanup, fireEvent } from '@testing-library/react';
 import React from 'react';
 import PlaylistList from './PlaylistList';
+import { Playlist } from '../libs/types';
 
-const mockPlaylists = [
+const mockPlaylists: Playlist[] = [
   {
     id: '1',
     name: 'New Music Friday - 2024-06-07',

@@ -1,9 +1,10 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import PlaylistListItem from './PlaylistListItem';
+import { Playlist } from '../libs/types';
 
-const playlist = {
+const playlist: Playlist = {
   id: '1',
   name: 'New Music Friday - 2024-06-07',
   publishedAt: '2024-06-07T12:00:00Z',

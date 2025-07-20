@@ -1,13 +1,7 @@
 import React from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-
-interface Playlist {
-  id: string;
-  name: string;
-  publishedAt: string;
-  thumbnail: string;
-}
+import { Playlist } from '../libs/types';
 
 interface PlaylistListItemProps {
   playlist: Playlist;

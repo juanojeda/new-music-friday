@@ -1,6 +1,6 @@
 import './App.css';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import PlaylistList from './PlaylistList';
+import PlaylistList from './components/PlaylistList';
 
 function App() {
   const theme = createTheme();
