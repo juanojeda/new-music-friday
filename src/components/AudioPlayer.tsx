@@ -84,12 +84,24 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
           <IconButton
             aria-label="play"
             onClick={() => playerRef.current?.playVideo && playerRef.current.playVideo()}
+            onKeyDown={e => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                playerRef.current?.playVideo && playerRef.current.playVideo();
+              }
+            }}
           >
             <PlayArrowIcon />
           </IconButton>
           <IconButton
             aria-label="pause"
             onClick={() => playerRef.current?.pauseVideo && playerRef.current.pauseVideo()}
+            onKeyDown={e => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                playerRef.current?.pauseVideo && playerRef.current.pauseVideo();
+              }
+            }}
           >
             <PauseIcon />
           </IconButton>

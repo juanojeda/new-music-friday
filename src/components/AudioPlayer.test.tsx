@@ -129,4 +129,54 @@ describe('AudioPlayer', () => {
     fireEvent.change(slider, { target: { value: 42 } });
     expect(seekTo).toHaveBeenCalledWith(42, true);
   });
+
+  it('has appropriate ARIA labels on all controls', async () => {
+    let onReadyCallback: (() => void) | undefined;
+    const playerMock = vi.fn((_id, opts) => {
+      onReadyCallback = opts.events.onReady;
+      return { destroy: vi.fn(), playVideo: vi.fn(), pauseVideo: vi.fn(), seekTo: vi.fn() };
+    });
+    window.YT = { Player: playerMock };
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    onReadyCallback && onReadyCallback();
+    expect(await screen.findByRole('button', { name: /play/i })).toHaveAttribute('aria-label', 'play');
+    expect(await screen.findByRole('button', { name: /pause/i })).toHaveAttribute('aria-label', 'pause');
+    expect(await screen.findByRole('slider', { name: /seek/i })).toHaveAttribute('aria-label', 'seek');
+  });
+
+  it('allows keyboard navigation and operation of all controls', async () => {
+    let onReadyCallback: (() => void) | undefined;
+    const playVideo = vi.fn();
+    const pauseVideo = vi.fn();
+    const seekTo = vi.fn();
+    const playerMock = vi.fn((_id, opts) => {
+      onReadyCallback = opts.events.onReady;
+      return { destroy: vi.fn(), playVideo, pauseVideo, seekTo };
+    });
+    window.YT = { Player: playerMock };
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    onReadyCallback && onReadyCallback();
+    const playButton = await screen.findByRole('button', { name: /play/i });
+    const pauseButton = await screen.findByRole('button', { name: /pause/i });
+    const slider = await screen.findByRole('slider', { name: /seek/i });
+    playButton.focus();
+    expect(playButton).toHaveFocus();
+    pauseButton.focus();
+    expect(pauseButton).toHaveFocus();
+    slider.focus();
+    expect(slider).toHaveFocus();
+    // Simulate keyboard activation (Enter/Space) for play
+    playButton && fireEvent.keyDown(playButton, { key: 'Enter', code: 'Enter' });
+    expect(playVideo).toHaveBeenCalledTimes(1);
+    playButton && fireEvent.keyDown(playButton, { key: ' ', code: 'Space' });
+    expect(playVideo).toHaveBeenCalledTimes(2);
+    // Simulate keyboard activation (Enter/Space) for pause
+    pauseButton && fireEvent.keyDown(pauseButton, { key: 'Enter', code: 'Enter' });
+    expect(pauseVideo).toHaveBeenCalledTimes(1);
+    pauseButton && fireEvent.keyDown(pauseButton, { key: ' ', code: 'Space' });
+    expect(pauseVideo).toHaveBeenCalledTimes(2);
+    // Simulate keyboard interaction with slider
+    fireEvent.keyDown(slider, { key: 'ArrowRight', code: 'ArrowRight' });
+    // (Slider keyboard interaction is handled by MUI, so just check focusability)
+  });
 });
