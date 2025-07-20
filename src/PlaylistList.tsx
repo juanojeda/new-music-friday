@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import Typography from '@mui/material/Typography';
 
 interface Playlist {
@@ -14,6 +15,7 @@ const PlaylistList: React.FC = () => {
   const [playlists, setPlaylists] = useState<Playlist[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/playlists.nmf.json')
@@ -43,7 +45,15 @@ const PlaylistList: React.FC = () => {
   return (
     <List>
       {playlists.map((playlist) => (
-        <ListItem key={playlist.id}>{playlist.name}</ListItem>
+        <ListItem key={playlist.id} disablePadding>
+          <ListItemButton
+            selected={selectedId === playlist.id}
+            aria-selected={selectedId === playlist.id}
+            onClick={() => setSelectedId(playlist.id)}
+          >
+            {playlist.name}
+          </ListItemButton>
+        </ListItem>
       ))}
     </List>
   );

@@ -93,8 +93,9 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 - [ ] **MIG-002**: Rebuild audio player and playlist UI as React components using Material UI
   - Priority: High
   - Dependencies: MIG-001, INF-002
-  - Status: Not Started
+  - Status: In Progress
   - Requirements File: [REQ-MIG-002-audio-player-playlist-ui.md](docs/requirements/REQ-MIG-002-audio-player-playlist-ui.md)
+  - Notes: PlaylistList component fetches from static playlists.nmf.json (SSG), integrated and tested in App. Next: playlist selection, thumbnails, audio player integration.
 - [ ] **MIG-003**: Write tests for all new React components (React Testing Library, Jest)
   - Priority: High
   - Dependencies: MIG-002

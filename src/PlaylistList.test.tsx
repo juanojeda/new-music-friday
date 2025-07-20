@@ -1,12 +1,11 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, waitFor, cleanup, fireEvent } from '@testing-library/react';
 import React from 'react';
 import PlaylistList from './PlaylistList';
 
-// Mock fetch globally
 const mockPlaylists = [
-  { id: '1', name: 'New Music Friday - 2024-06-07', publishedAt: '2024-06-07T12:00:00Z' },
-  { id: '2', name: 'New Music Friday - 2024-05-31', publishedAt: '2024-05-31T12:00:00Z' },
+  { id: '1', name: 'New Music Friday - 2024-06-07', publishedAt: '2024-06-07T12:00:00Z', thumbnail: '' },
+  { id: '2', name: 'New Music Friday - 2024-05-31', publishedAt: '2024-05-31T12:00:00Z', thumbnail: '' },
 ];
 
 global.fetch = vi.fn(() =>
@@ -15,6 +14,13 @@ global.fetch = vi.fn(() =>
     json: () => Promise.resolve(mockPlaylists),
   })
 ) as any;
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+afterEach(() => {
+  cleanup();
+});
 
 describe('PlaylistList', () => {
   it('fetches and displays playlists from the API', async () => {
@@ -32,5 +38,15 @@ describe('PlaylistList', () => {
     await waitFor(() => {
       expect(screen.getByText(/failed to load playlists/i)).toBeInTheDocument();
     });
+  });
+
+  it('allows the user to select a playlist and highlights it', async () => {
+    render(<PlaylistList />);
+    await waitFor(() => {
+      expect(screen.getByText('New Music Friday - 2024-06-07')).toBeInTheDocument();
+    });
+    const firstPlaylistButton = screen.getAllByRole('button', { name: 'New Music Friday - 2024-06-07' })[0];
+    fireEvent.click(firstPlaylistButton);
+    expect(firstPlaylistButton).toHaveAttribute('aria-selected', 'true');
   });
 }); 
