@@ -29,6 +29,8 @@ function setupPlayerMock(overrides: Record<string, unknown> = {}) {
       playVideo: vi.fn(),
       pauseVideo: vi.fn(),
       seekTo: vi.fn(),
+      getCurrentTime: vi.fn().mockReturnValue(0), // Default to 0 for getCurrentTime
+      getDuration: vi.fn().mockReturnValue(0), // Default to 0 for getDuration
       ...overrides,
     };
   });
@@ -157,5 +159,25 @@ describe('AudioPlayer', () => {
     pauseButton && fireEvent.keyDown(pauseButton, { key: ' ', code: 'Space' });
     expect(pauseVideo).toHaveBeenCalledTimes(2);
     fireEvent.keyDown(slider, { key: 'ArrowRight', code: 'ArrowRight' });
+  });
+
+  it('allows seeking forward/backward by 5s with right/left arrow keys on the slider', async () => {
+    const playVideo = vi.fn();
+    const pauseVideo = vi.fn();
+    const seekTo = vi.fn();
+    // Mock getCurrentTime and getDuration
+    const getCurrentTime = vi.fn().mockReturnValue(30);
+    const getDuration = vi.fn().mockReturnValue(100);
+    const { onReadyCallback } = setupPlayerMock({ playVideo, pauseVideo, seekTo, getCurrentTime, getDuration });
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    onReadyCallback() && onReadyCallback()!();
+    const slider = await screen.findByRole('slider', { name: /seek/i });
+    slider.focus();
+    // Simulate right arrow (forward 5s)
+    fireEvent.keyDown(slider, { key: 'ArrowRight', code: 'ArrowRight' });
+    expect(seekTo).toHaveBeenCalledWith(35, true);
+    // Simulate left arrow (backward 5s)
+    fireEvent.keyDown(slider, { key: 'ArrowLeft', code: 'ArrowLeft' });
+    expect(seekTo).toHaveBeenCalledWith(25, true);
   });
 });

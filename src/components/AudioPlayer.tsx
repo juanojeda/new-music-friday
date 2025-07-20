@@ -122,6 +122,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
               if (typeof value === 'number')
                 playerRef.current?.seekTo && playerRef.current.seekTo(value, true);
             }}
+            onKeyDown={e => {
+              if (!playerRef.current) return;
+              if (e.key === 'ArrowRight') {
+                const current = playerRef.current.getCurrentTime?.() ?? 0;
+                playerRef.current.seekTo && playerRef.current.seekTo(current + 5, true);
+              } else if (e.key === 'ArrowLeft') {
+                const current = playerRef.current.getCurrentTime?.() ?? 0;
+                playerRef.current.seekTo && playerRef.current.seekTo(current - 5, true);
+              }
+            }}
           />
         </>
       )}
