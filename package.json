@@ -12,7 +12,6 @@
     "test": "vitest",
     "typecheck": "tsc --noEmit",
     "validate": "npm run format; npm run test -- --run; npm run typecheck; npm run lint"
-
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

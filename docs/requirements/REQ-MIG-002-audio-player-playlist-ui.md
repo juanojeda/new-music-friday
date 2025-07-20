@@ -1,9 +1,11 @@
 # REQ-MIG-002-audio-player-playlist-ui.md
 
 ## User Story
+
 As a user, I want to browse and play "New Music Friday" playlists in a modern, accessible React UI, so that I can easily discover and listen to new music each week.
 
 ## Functional Requirements
+
 - FR-MIG-002-001: Display a list of available playlists fetched from the API
   - Description: The UI must fetch and display a list of all available "New Music Friday" playlists from the API (e.g., YouTube Music API), sorted by recency.
   - Pre-conditions: API endpoint and credentials are available.
@@ -46,14 +48,16 @@ As a user, I want to browse and play "New Music Friday" playlists in a modern, a
   - Dependencies: FR-MIG-002-002
 
 ## Non-Functional Requirements
+
 - NFR-MIG-002-001: The UI must be fully accessible (keyboard navigation, ARIA labels, etc.).
 - NFR-MIG-002-002: The UI must be responsive and work on mobile and desktop.
 - NFR-MIG-002-003: Only Material UI components may be used for UI (no custom or third-party UI libraries).
 
 ## Technical Guidance
+
 - Use Material UI components for all UI elements (lists, buttons, player controls, etc.).
 - Use React state to manage playlist selection and playback.
 - Fetch playlist data from the API (e.g., YouTube Music API) at runtime; do not use mock data.
 - Integrate the YouTube IFrame Player API for audio playback, with the video area hidden.
 - Ensure all UI is accessible and responsive.
-- Handle API errors gracefully and provide user feedback if playlists cannot be loaded. 
+- Handle API errors gracefully and provide user feedback if playlists cannot be loaded.

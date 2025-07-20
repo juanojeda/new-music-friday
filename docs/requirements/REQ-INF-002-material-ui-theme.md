@@ -1,9 +1,11 @@
 # REQ-INF-002-material-ui-theme.md
 
 ## User Story
+
 As a developer, I want Material UI integrated and a theme configured in the React app, so that I can use accessible, consistent, and customizable UI components.
 
 ## Functional Requirements
+
 - FR-INF-002-001: Install and configure Material UI
   - Description: The project must include Material UI (`@mui/material`, `@emotion/react`, `@emotion/styled`) as dependencies, and the app must be wrapped in a `ThemeProvider` with a default theme.
   - Pre-conditions: React app is set up at the project root.
@@ -32,12 +34,14 @@ As a developer, I want Material UI integrated and a theme configured in the Reac
   - Dependencies: FR-INF-002-001
 
 ## Non-Functional Requirements
+
 - NFR-INF-002-001: The app must use only Material UI components for UI (no custom or third-party UI libraries).
 - NFR-INF-002-002: The theme must be customizable via the `createTheme` API.
 - NFR-INF-002-003: The integration must work on macOS and Linux.
 
 ## Technical Guidance
+
 - Install `@mui/material`, `@emotion/react`, and `@emotion/styled` as dependencies.
 - Wrap the app in a `ThemeProvider` using `createTheme`.
 - Use Material UI components (e.g., Button) in the app.
-- Customize the theme as needed for branding or accessibility. 
+- Customize the theme as needed for branding or accessibility.

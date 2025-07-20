@@ -4,15 +4,25 @@ import React from 'react';
 import App from './App';
 
 const mockPlaylists = [
-  { id: '1', name: 'New Music Friday - 2024-06-07', publishedAt: '2024-06-07T12:00:00Z', thumbnail: '' },
-  { id: '2', name: 'New Music Friday - 2024-05-31', publishedAt: '2024-05-31T12:00:00Z', thumbnail: '' },
+  {
+    id: '1',
+    name: 'New Music Friday - 2024-06-07',
+    publishedAt: '2024-06-07T12:00:00Z',
+    thumbnail: '',
+  },
+  {
+    id: '2',
+    name: 'New Music Friday - 2024-05-31',
+    publishedAt: '2024-05-31T12:00:00Z',
+    thumbnail: '',
+  },
 ];
 
 global.fetch = vi.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve(mockPlaylists),
-  })
+  }),
 ) as any;
 
 describe('App', () => {
@@ -24,4 +34,4 @@ describe('App', () => {
       expect(screen.getByText('New Music Friday - 2024-05-31')).toBeInTheDocument();
     });
   });
-}); 
+});

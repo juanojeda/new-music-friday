@@ -1,9 +1,11 @@
 # REQ-INF-003-eslint-prettier-tsconfig.md
 
 ## User Story
+
 As a developer, I want consistent linting, formatting, and type checking in the React codebase, so that code quality is maintained and onboarding is easy.
 
 ## Functional Requirements
+
 - FR-INF-003-001: Configure ESLint for React + TypeScript
   - Description: ESLint must be set up using the flat config system, with rules for React, TypeScript, and Prettier integration. The legacy directory must be excluded from linting.
   - Pre-conditions: React app is set up at the project root.
@@ -47,12 +49,14 @@ As a developer, I want consistent linting, formatting, and type checking in the 
   - Dependencies: INF-001
 
 ## Non-Functional Requirements
+
 - NFR-INF-003-001: Linting, formatting, and type checking must run in under 1 minute for the current codebase.
 - NFR-INF-003-002: All tools must work on macOS and Linux.
 
 ## Technical Guidance
+
 - Use ESLint flat config (CommonJS) with React, TypeScript, and Prettier plugins.
 - Exclude the legacy directory from linting and type checking.
 - Use Prettier config file for formatting rules.
 - Use strict TypeScript settings in tsconfig.json, including only the new code.
-- Provide npm scripts for linting (`npm run lint`), formatting (`npm run format`), and type checking (`tsc --noEmit`). 
+- Provide npm scripts for linting (`npm run lint`), formatting (`npm run format`), and type checking (`tsc --noEmit`).

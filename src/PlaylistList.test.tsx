@@ -4,15 +4,25 @@ import React from 'react';
 import PlaylistList from './PlaylistList';
 
 const mockPlaylists = [
-  { id: '1', name: 'New Music Friday - 2024-06-07', publishedAt: '2024-06-07T12:00:00Z', thumbnail: '' },
-  { id: '2', name: 'New Music Friday - 2024-05-31', publishedAt: '2024-05-31T12:00:00Z', thumbnail: '' },
+  {
+    id: '1',
+    name: 'New Music Friday - 2024-06-07',
+    publishedAt: '2024-06-07T12:00:00Z',
+    thumbnail: '',
+  },
+  {
+    id: '2',
+    name: 'New Music Friday - 2024-05-31',
+    publishedAt: '2024-05-31T12:00:00Z',
+    thumbnail: '',
+  },
 ];
 
 global.fetch = vi.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve(mockPlaylists),
-  })
+  }),
 ) as any;
 
 beforeEach(() => {
@@ -45,8 +55,10 @@ describe('PlaylistList', () => {
     await waitFor(() => {
       expect(screen.getByText('New Music Friday - 2024-06-07')).toBeInTheDocument();
     });
-    const firstPlaylistButton = screen.getAllByRole('button', { name: 'New Music Friday - 2024-06-07' })[0];
+    const firstPlaylistButton = screen.getAllByRole('button', {
+      name: 'New Music Friday - 2024-06-07',
+    })[0];
     fireEvent.click(firstPlaylistButton);
     expect(firstPlaylistButton).toHaveAttribute('aria-selected', 'true');
   });
-}); 
+});

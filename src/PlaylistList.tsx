@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
 import Typography from '@mui/material/Typography';
+import PlaylistListItem from './PlaylistListItem';
 
 interface Playlist {
   id: string;
@@ -45,18 +44,15 @@ const PlaylistList: React.FC = () => {
   return (
     <List>
       {playlists.map((playlist) => (
-        <ListItem key={playlist.id} disablePadding>
-          <ListItemButton
-            selected={selectedId === playlist.id}
-            aria-selected={selectedId === playlist.id}
-            onClick={() => setSelectedId(playlist.id)}
-          >
-            {playlist.name}
-          </ListItemButton>
-        </ListItem>
+        <PlaylistListItem
+          key={playlist.id}
+          playlist={playlist}
+          selected={selectedId === playlist.id}
+          onClick={() => setSelectedId(playlist.id)}
+        />
       ))}
     </List>
   );
 };
 
-export default PlaylistList; 
+export default PlaylistList;

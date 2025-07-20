@@ -40,13 +40,15 @@ Chosen option: **Fetch playlist data from the API at build time and include it a
 ### Considered options
 
 #### 1. Fetch playlist data from the API at runtime
+
 - Would require exposing API keys to the client (not secure), or running a backend server (not static hosting)
 - More complex, less secure, and less portable
 
 #### 2. Fetch playlist data from the API at build time (Recommended)
+
 - Write a Node.js script to fetch playlists from the YouTube API and save as `public/playlists.json`
 - Run this script as part of the build process (e.g., `prebuild` npm script)
 - React app loads playlists from `/playlists.json` at runtime (no API calls needed)
 - Site is fully static and can be hosted anywhere
 
---- 
+---
