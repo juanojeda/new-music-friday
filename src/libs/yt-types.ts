@@ -1,6 +1,9 @@
 // Minimal type-safe YouTube IFrame Player API types for use in both component and tests
 export interface YTPlayer {
   destroy?: () => void;
+  playVideo?: () => void;
+  pauseVideo?: () => void;
+  seekTo?: (seconds: number, allowSeekAhead: boolean) => void;
 }
 export interface YTPlayerOptions {
   height: string;

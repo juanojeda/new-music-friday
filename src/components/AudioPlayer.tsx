@@ -28,20 +28,17 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
   const latestPlaylistRef = useRef<Playlist | null>(playlist);
   const [playerReady, setPlayerReady] = useState(false);
 
-  // Always keep latest playlist in ref
-  useEffect(() => {
+  useEffect(function keepLatestPlaylistInRef() {
     latestPlaylistRef.current = playlist;
   }, [playlist]);
 
-  // Ensure script is loaded
-  useEffect(() => {
+  useEffect(function ensureYouTubeScriptLoaded() {
     if (playlist && typeof window !== 'undefined' && !hasYT(window)) {
       ensureYouTubeIframeAPILoaded();
     }
   }, [playlist]);
 
-  // Create player when API is ready
-  useEffect(() => {
+  useEffect(function createPlayerWhenAPIReady() {
     if (!playlist || typeof window === 'undefined') return;
     function createPlayerForCurrentPlaylist() {
       if (playerRef.current) return;
@@ -69,7 +66,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
     if (hasYT(window)) {
       createPlayerForCurrentPlaylist();
     }
-    // Cleanup: destroy player on unmount or playlist change
     return () => {
       if (playerRef.current) {
         playerRef.current.destroy?.();
@@ -85,13 +81,25 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
       <div id={playerDivId.current} />
       {playerReady && (
         <>
-          <IconButton aria-label="play">
+          <IconButton
+            aria-label="play"
+            onClick={() => playerRef.current?.playVideo && playerRef.current.playVideo()}
+          >
             <PlayArrowIcon />
           </IconButton>
-          <IconButton aria-label="pause">
+          <IconButton
+            aria-label="pause"
+            onClick={() => playerRef.current?.pauseVideo && playerRef.current.pauseVideo()}
+          >
             <PauseIcon />
           </IconButton>
-          <Slider aria-label="seek" />
+          <Slider
+            aria-label="seek"
+            onChange={(_, value) => {
+              if (typeof value === 'number')
+                playerRef.current?.seekTo && playerRef.current.seekTo(value, true);
+            }}
+          />
         </>
       )}
     </div>
