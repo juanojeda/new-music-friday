@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import React from 'react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import App from './App';
 import { Playlist } from './libs/types';
 
@@ -34,5 +33,27 @@ describe('App', () => {
       expect(screen.getByText('New Music Friday - 2024-06-07')).toBeInTheDocument();
       expect(screen.getByText('New Music Friday - 2024-05-31')).toBeInTheDocument();
     });
+  });
+
+  it('renders AudioPlayer when a playlist is selected', async () => {
+    render(<App />);
+    await waitFor(() => {
+      expect(screen.getByText('New Music Friday - 2024-06-07')).toBeInTheDocument();
+    });
+    const firstPlaylistButton = screen.getAllByRole('button', {
+      name: 'New Music Friday - 2024-06-07',
+    })[0];
+    fireEvent.click(firstPlaylistButton);
+    expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /pause/i })).toBeInTheDocument();
+    expect(screen.getByRole('slider', { name: /seek/i })).toBeInTheDocument();
+  });
+
+  it('does not render AudioPlayer when no playlist is selected', async () => {
+    render(<App />);
+    await waitFor(() => {
+      expect(screen.getByText('New Music Friday - 2024-06-07')).toBeInTheDocument();
+    });
+    expect(screen.queryByRole('button', { name: /play/i })).not.toBeInTheDocument();
   });
 });

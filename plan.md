@@ -98,14 +98,14 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Atomic Tasks:
     - [x] Display a list of available playlists fetched from the API (static JSON for now)
     - [x] Allow user to select a playlist and highlight selection
-    - [ ] Pass selected playlist to parent component (App) via callback
-    - [ ] Display playlist thumbnails in the list
+    - [x] Pass selected playlist to parent component (App) via callback
     - [ ] Render a unified audio player using Material UI
     - [ ] Integrate with YouTube IFrame Player API for playback
     - [ ] Play, pause, and seek controls for audio player
     - [ ] Hide video area of YouTube player
     - [ ] Ensure full accessibility (keyboard navigation, ARIA labels)
     - [ ] Ensure responsive design for mobile and desktop
+    - [ ] Display playlist thumbnails in the list
     - [ ] Handle API errors gracefully and provide user feedback
 - [ ] **MIG-003**: Write tests for all new React components (React Testing Library, Jest)
   - Priority: High
