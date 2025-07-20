@@ -61,6 +61,16 @@ describe('AudioPlayer', () => {
     expect(options).toBeDefined();
   });
 
+  it('instantiates YT.Player with height and width set to 0 to hide video area', () => {
+    const playerMock = vi.fn();
+    window.YT = { Player: playerMock };
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    expect(playerMock).toHaveBeenCalled();
+    const [_containerId, options] = playerMock.mock.calls[0];
+    expect(options.height).toBe('0');
+    expect(options.width).toBe('0');
+  });
+
   it('renders controls only after player is ready', async () => {
     let onReadyCallback: (() => void) | undefined;
     const playerMock = vi.fn((_id, opts) => {
