@@ -168,7 +168,13 @@ describe('AudioPlayer', () => {
     // Mock getCurrentTime and getDuration
     const getCurrentTime = vi.fn().mockReturnValue(30);
     const getDuration = vi.fn().mockReturnValue(100);
-    const { onReadyCallback } = setupPlayerMock({ playVideo, pauseVideo, seekTo, getCurrentTime, getDuration });
+    const { onReadyCallback } = setupPlayerMock({
+      playVideo,
+      pauseVideo,
+      seekTo,
+      getCurrentTime,
+      getDuration,
+    });
     render(<AudioPlayer playlist={mockPlaylist} />);
     onReadyCallback() && onReadyCallback()!();
     const slider = await screen.findByRole('slider', { name: /seek/i });
