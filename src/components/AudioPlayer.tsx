@@ -34,6 +34,14 @@ const handlePlayerAction =
     }
   };
 
+const SEEK_STEP_SECONDS = 5;
+
+function handleSeekArrowKey(player: YTPlayer | null, direction: 1 | -1) {
+  if (!player?.getCurrentTime || !player.seekTo) return;
+  const current = player.getCurrentTime();
+  player.seekTo(current + SEEK_STEP_SECONDS * direction, true);
+}
+
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
   const playerDivId = useRef(`yt-player-${Math.random().toString(36).slice(2)}`);
   const playerRef = useRef<YTPlayer | null>(null);
@@ -122,14 +130,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
               if (typeof value === 'number')
                 playerRef.current?.seekTo && playerRef.current.seekTo(value, true);
             }}
-            onKeyDown={e => {
+            onKeyDown={(e) => {
               if (!playerRef.current) return;
               if (e.key === 'ArrowRight') {
-                const current = playerRef.current.getCurrentTime?.() ?? 0;
-                playerRef.current.seekTo && playerRef.current.seekTo(current + 5, true);
+                handleSeekArrowKey(playerRef.current, 1);
               } else if (e.key === 'ArrowLeft') {
-                const current = playerRef.current.getCurrentTime?.() ?? 0;
-                playerRef.current.seekTo && playerRef.current.seekTo(current - 5, true);
+                handleSeekArrowKey(playerRef.current, -1);
               }
             }}
           />
