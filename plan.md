@@ -28,6 +28,12 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 
 ### Enhancements - Improved User Experience
 
+- [ ] **ENH-003**: Audio Player Controls and Track Data Improvements
+  - Priority: Critical
+  - Dependencies: ENH-002, MIG-002
+  - Status: Not Started
+  - Requirements File: [REQ-007-audio-player-controls-and-track-data.md](docs/requirements/REQ-007-audio-player-controls-and-track-data.md)
+
 - [ ] **ENH-001**: Improved audio player experience using YouTube IFrame Player API
   - Priority: High
   - Dependencies: CF-003
