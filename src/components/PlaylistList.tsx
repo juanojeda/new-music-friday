@@ -1,41 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import PlaylistListItem from './PlaylistListItem';
 import { Playlist } from '../libs/types';
 
 interface PlaylistListProps {
-  onSelect?: (playlist: Playlist) => void;
+  playlists: Playlist[];
+  selectedId: string | null;
+  onSelect: (playlist: Playlist) => void;
 }
 
-const PlaylistList: React.FC<PlaylistListProps> = ({ onSelect }) => {
-  const [playlists, setPlaylists] = useState<Playlist[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch('/playlists.nmf.json')
-      .then((res) => {
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-      })
-      .then((data) => {
-        setPlaylists(data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError(true);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
-    return <Typography>Loading...</Typography>;
-  }
-  if (error) {
-    return <Typography color="error">Failed to load playlists.</Typography>;
-  }
+const PlaylistList: React.FC<PlaylistListProps> = ({ playlists, selectedId, onSelect }) => {
   if (!playlists || playlists.length === 0) {
     return <Typography>No playlists found.</Typography>;
   }
@@ -46,10 +21,7 @@ const PlaylistList: React.FC<PlaylistListProps> = ({ onSelect }) => {
           key={playlist.id}
           playlist={playlist}
           selected={selectedId === playlist.id}
-          onClick={() => {
-            setSelectedId(playlist.id);
-            if (onSelect) onSelect(playlist);
-          }}
+          onClick={() => onSelect(playlist)}
         />
       ))}
     </List>

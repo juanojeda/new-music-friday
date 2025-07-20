@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "format": "prettier --write .",
+    "format": "prettier --write --list-different .",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
     "validate": "npm run format; npm run test -- --run; npm run typecheck; npm run lint"

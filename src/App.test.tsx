@@ -23,7 +23,7 @@ global.fetch = vi.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve(mockPlaylists),
-  })
+  }),
 ) as unknown as typeof fetch;
 
 describe('App', () => {
