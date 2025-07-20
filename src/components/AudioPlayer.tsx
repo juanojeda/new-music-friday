@@ -22,58 +22,79 @@ function ensureYouTubeIframeAPILoaded() {
   }
 }
 
+const handlePlayerAction =
+  (action: (() => void) | undefined) => (e: React.MouseEvent | React.KeyboardEvent) => {
+    if (
+      (e as React.KeyboardEvent).key === undefined ||
+      (e as React.KeyboardEvent).key === 'Enter' ||
+      (e as React.KeyboardEvent).key === ' '
+    ) {
+      e.preventDefault();
+      action && action();
+    }
+  };
+
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
   const playerDivId = useRef(`yt-player-${Math.random().toString(36).slice(2)}`);
   const playerRef = useRef<YTPlayer | null>(null);
   const latestPlaylistRef = useRef<Playlist | null>(playlist);
   const [playerReady, setPlayerReady] = useState(false);
 
-  useEffect(function keepLatestPlaylistInRef() {
-    latestPlaylistRef.current = playlist;
-  }, [playlist]);
+  useEffect(
+    function keepLatestPlaylistInRef() {
+      latestPlaylistRef.current = playlist;
+    },
+    [playlist],
+  );
 
-  useEffect(function ensureYouTubeScriptLoaded() {
-    if (playlist && typeof window !== 'undefined' && !hasYT(window)) {
-      ensureYouTubeIframeAPILoaded();
-    }
-  }, [playlist]);
-
-  useEffect(function createPlayerWhenAPIReady() {
-    if (!playlist || typeof window === 'undefined') return;
-    function createPlayerForCurrentPlaylist() {
-      if (playerRef.current) return;
-      const current = latestPlaylistRef.current;
-      if (!current) return;
-      playerRef.current = new (window as Window & typeof globalThis).YT!.Player(
-        playerDivId.current,
-        {
-          height: '0',
-          width: '0',
-          playerVars: { listType: 'playlist', list: current.id },
-          events: {
-            onReady: () => setPlayerReady(true),
-          },
-        } as YTPlayerOptions,
-      );
-    }
-    // Set up the callback only once
-    if (!(window as Window & typeof globalThis).onYouTubeIframeAPIReady) {
-      (window as Window & typeof globalThis).onYouTubeIframeAPIReady = () => {
-        createPlayerForCurrentPlaylist();
-      };
-    }
-    // If API is already loaded, create player immediately
-    if (hasYT(window)) {
-      createPlayerForCurrentPlaylist();
-    }
-    return () => {
-      if (playerRef.current) {
-        playerRef.current.destroy?.();
-        playerRef.current = null;
+  useEffect(
+    function ensureYouTubeScriptLoaded() {
+      if (playlist && typeof window !== 'undefined' && !hasYT(window)) {
+        ensureYouTubeIframeAPILoaded();
       }
-      setPlayerReady(false);
-    };
-  }, [playlist]);
+    },
+    [playlist],
+  );
+
+  useEffect(
+    function createPlayerWhenAPIReady() {
+      if (!playlist || typeof window === 'undefined') return;
+      function createPlayerForCurrentPlaylist() {
+        if (playerRef.current) return;
+        const current = latestPlaylistRef.current;
+        if (!current) return;
+        playerRef.current = new (window as Window & typeof globalThis).YT!.Player(
+          playerDivId.current,
+          {
+            height: '0',
+            width: '0',
+            playerVars: { listType: 'playlist', list: current.id },
+            events: {
+              onReady: () => setPlayerReady(true),
+            },
+          } as YTPlayerOptions,
+        );
+      }
+      // Set up the callback only once
+      if (!(window as Window & typeof globalThis).onYouTubeIframeAPIReady) {
+        (window as Window & typeof globalThis).onYouTubeIframeAPIReady = () => {
+          createPlayerForCurrentPlaylist();
+        };
+      }
+      // If API is already loaded, create player immediately
+      if (hasYT(window)) {
+        createPlayerForCurrentPlaylist();
+      }
+      return () => {
+        if (playerRef.current) {
+          playerRef.current.destroy?.();
+          playerRef.current = null;
+        }
+        setPlayerReady(false);
+      };
+    },
+    [playlist],
+  );
 
   if (!playlist) return null;
   return (
@@ -83,25 +104,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
         <>
           <IconButton
             aria-label="play"
-            onClick={() => playerRef.current?.playVideo && playerRef.current.playVideo()}
-            onKeyDown={e => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                playerRef.current?.playVideo && playerRef.current.playVideo();
-              }
-            }}
+            onClick={handlePlayerAction(playerRef.current?.playVideo)}
+            onKeyDown={handlePlayerAction(playerRef.current?.playVideo)}
           >
             <PlayArrowIcon />
           </IconButton>
           <IconButton
             aria-label="pause"
-            onClick={() => playerRef.current?.pauseVideo && playerRef.current.pauseVideo()}
-            onKeyDown={e => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                playerRef.current?.pauseVideo && playerRef.current.pauseVideo();
-              }
-            }}
+            onClick={handlePlayerAction(playerRef.current?.pauseVideo)}
+            onKeyDown={handlePlayerAction(playerRef.current?.pauseVideo)}
           >
             <PauseIcon />
           </IconButton>
