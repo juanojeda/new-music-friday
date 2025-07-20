@@ -62,4 +62,17 @@ describe('PlaylistList', () => {
     fireEvent.click(firstPlaylistButton);
     expect(firstPlaylistButton).toHaveAttribute('aria-selected', 'true');
   });
+
+  it('calls onSelect with the selected playlist when a playlist is clicked', async () => {
+    const handleSelect = vi.fn();
+    render(<PlaylistList onSelect={handleSelect} />);
+    await waitFor(() => {
+      expect(screen.getByText('New Music Friday - 2024-06-07')).toBeInTheDocument();
+    });
+    const firstPlaylistButton = screen.getAllByRole('button', {
+      name: 'New Music Friday - 2024-06-07',
+    })[0];
+    fireEvent.click(firstPlaylistButton);
+    expect(handleSelect).toHaveBeenCalledWith(mockPlaylists[0]);
+  });
 });

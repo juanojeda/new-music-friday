@@ -4,7 +4,11 @@ import Typography from '@mui/material/Typography';
 import PlaylistListItem from './PlaylistListItem';
 import { Playlist } from '../libs/types';
 
-const PlaylistList: React.FC = () => {
+interface PlaylistListProps {
+  onSelect?: (playlist: Playlist) => void;
+}
+
+const PlaylistList: React.FC<PlaylistListProps> = ({ onSelect }) => {
   const [playlists, setPlaylists] = useState<Playlist[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -42,7 +46,10 @@ const PlaylistList: React.FC = () => {
           key={playlist.id}
           playlist={playlist}
           selected={selectedId === playlist.id}
-          onClick={() => setSelectedId(playlist.id)}
+          onClick={() => {
+            setSelectedId(playlist.id);
+            if (onSelect) onSelect(playlist);
+          }}
         />
       ))}
     </List>
