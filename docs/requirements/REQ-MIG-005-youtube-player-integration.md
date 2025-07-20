@@ -60,4 +60,4 @@ As a user, I want to select a playlist and have it play in a unified audio playe
 3. Render controls only when player is ready.
 4. On playlist change, call loadPlaylist on existing player (do not recreate).
 5. Ensure no memory leaks or duplicate players.
-6. Add tests for all above behaviors. 
+6. Add tests for all above behaviors.
