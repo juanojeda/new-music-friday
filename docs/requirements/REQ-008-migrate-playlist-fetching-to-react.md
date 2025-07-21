@@ -49,4 +49,4 @@ As a developer, I want the weekly playlist fetching logic (originally implemente
 - Use a scheduled job (e.g., GitHub Actions, serverless function, or local cron) to trigger the weekly fetch and update the playlist data file.
 - Store playlist data in a JSON file (e.g., `public/playlists.nmf.json`) for the React app to consume at build time.
 - Ensure error handling for failed fetches (retry, alert, etc.).
-- Trigger a site rebuild/deploy after a successful fetch to update the static site with the latest playlists. 
+- Trigger a site rebuild/deploy after a successful fetch to update the static site with the latest playlists.

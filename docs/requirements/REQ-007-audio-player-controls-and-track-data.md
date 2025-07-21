@@ -76,4 +76,4 @@ As a listener, I want to control playback with next/prev, play/pause toggle, and
 
 - YouTube IFrame Player API
 - Material UI
-- React 
+- React
