@@ -3,6 +3,7 @@ import { useYouTubePlayer } from './useYouTubePlayer';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Playlist } from '../libs/types';
 import { YTPlayerConstructor } from '../libs/yt-types';
+import { waitFor } from '@testing-library/react';
 
 const mockPlaylist: Playlist = {
   id: '1',
@@ -89,5 +90,25 @@ describe('useYouTubePlayer', () => {
     expect(window.onYouTubeIframeAPIReady).toBeUndefined();
     renderHook(() => useYouTubePlayer(mockPlaylist));
     expect(typeof window.onYouTubeIframeAPIReady).toBe('function');
+  });
+
+  it('exposes playerState as "playing" or "paused" when the player state changes', async () => {
+    let onStateChangeHandler: ((event: { data: number }) => void) | undefined;
+    window.YT = {
+      Player: vi.fn((_id, opts) => {
+        onStateChangeHandler = opts.events.onStateChange;
+        setTimeout(() => opts.events.onReady(), 0);
+        return { destroy: vi.fn() };
+      }),
+    };
+    const { result } = renderHook(() => useYouTubePlayer(mockPlaylist));
+    // Simulate player ready
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    // Simulate playing state
+    onStateChangeHandler && onStateChangeHandler({ data: 1 });
+    await waitFor(() => expect(result.current.playerState).toBe('playing'));
+    // Simulate paused state
+    onStateChangeHandler && onStateChangeHandler({ data: 2 });
+    await waitFor(() => expect(result.current.playerState).toBe('paused'));
   });
 });

@@ -19,6 +19,7 @@ export function useYouTubePlayer(playlist: Playlist | null) {
   const playerRef = useRef<YTPlayer | null>(null);
   const latestPlaylistRef = useRef<Playlist | null>(playlist);
   const [playerReady, setPlayerReady] = useState(false);
+  const [playerState, setPlayerState] = useState<null | 'playing' | 'paused'>(null);
 
   useEffect(
     function keepLatestPlaylistInRef() {
@@ -51,6 +52,10 @@ export function useYouTubePlayer(playlist: Playlist | null) {
             playerVars: { listType: 'playlist', list: current.id },
             events: {
               onReady: () => setPlayerReady(true),
+              onStateChange: (event: { data: number }) => {
+                if (event.data === 1) setPlayerState('playing');
+                else if (event.data === 2) setPlayerState('paused');
+              },
             },
           } as YTPlayerOptions,
         );
@@ -71,12 +76,13 @@ export function useYouTubePlayer(playlist: Playlist | null) {
           playerRef.current = null;
         }
         setPlayerReady(false);
+        setPlayerState(null);
       };
     },
     [playlist],
   );
 
-  return { playerRef, playerReady, playerDivId };
+  return { playerRef, playerReady, playerDivId, playerState };
 }
 
 // Test skeleton for the hook
