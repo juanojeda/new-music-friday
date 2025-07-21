@@ -106,9 +106,9 @@ describe('useYouTubePlayer', () => {
     await new Promise((resolve) => setTimeout(resolve, 10));
     // Simulate playing state
     onStateChangeHandler && onStateChangeHandler({ data: 1 });
-    await waitFor(() => expect(result.current.playerState).toBe('playing'));
+    await waitFor(() => expect(result.current.playerState).toBe<'playing' | 'paused'>('playing'));
     // Simulate paused state
     onStateChangeHandler && onStateChangeHandler({ data: 2 });
-    await waitFor(() => expect(result.current.playerState).toBe('paused'));
+    await waitFor(() => expect(result.current.playerState).toBe<'playing' | 'paused'>('paused'));
   });
 });

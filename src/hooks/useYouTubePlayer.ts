@@ -14,73 +14,70 @@ function ensureYouTubeIframeAPILoaded() {
   }
 }
 
+type PlayerState = 'playing' | 'paused' | null;
+
+function mapYTPlayerState(data: number): PlayerState {
+  if (data === 1) return 'playing';
+  if (data === 2) return 'paused';
+  return null;
+}
+
+export type { PlayerState };
 export function useYouTubePlayer(playlist: Playlist | null) {
   const playerDivId = useRef(`yt-player-${Math.random().toString(36).slice(2)}`);
   const playerRef = useRef<YTPlayer | null>(null);
   const latestPlaylistRef = useRef<Playlist | null>(playlist);
   const [playerReady, setPlayerReady] = useState(false);
-  const [playerState, setPlayerState] = useState<null | 'playing' | 'paused'>(null);
+  const [playerState, setPlayerState] = useState<PlayerState>(null);
 
-  useEffect(
-    function keepLatestPlaylistInRef() {
-      latestPlaylistRef.current = playlist;
-    },
-    [playlist],
-  );
+  useEffect(() => {
+    latestPlaylistRef.current = playlist;
+  }, [playlist]);
 
-  useEffect(
-    function ensureYouTubeScriptLoaded() {
-      if (playlist && typeof window !== 'undefined' && !hasYT(window)) {
-        ensureYouTubeIframeAPILoaded();
-      }
-    },
-    [playlist],
-  );
+  useEffect(() => {
+    if (playlist && typeof window !== 'undefined' && !hasYT(window)) {
+      ensureYouTubeIframeAPILoaded();
+    }
+  }, [playlist]);
 
-  useEffect(
-    function createPlayerWhenAPIReady() {
-      if (!playlist || typeof window === 'undefined') return;
-      function createPlayerForCurrentPlaylist() {
-        if (playerRef.current) return;
-        const current = latestPlaylistRef.current;
-        if (!current) return;
-        playerRef.current = new (window as Window & typeof globalThis).YT!.Player(
-          playerDivId.current,
-          {
-            height: '0',
-            width: '0',
-            playerVars: { listType: 'playlist', list: current.id },
-            events: {
-              onReady: () => setPlayerReady(true),
-              onStateChange: (event: { data: number }) => {
-                if (event.data === 1) setPlayerState('playing');
-                else if (event.data === 2) setPlayerState('paused');
-              },
+  useEffect(() => {
+    if (!playlist || typeof window === 'undefined') return;
+    function createPlayerForCurrentPlaylist() {
+      if (playerRef.current) return;
+      const current = latestPlaylistRef.current;
+      if (!current) return;
+      playerRef.current = new (window as Window & typeof globalThis).YT!.Player(
+        playerDivId.current,
+        {
+          height: '0',
+          width: '0',
+          playerVars: { listType: 'playlist', list: current.id },
+          events: {
+            onReady: () => setPlayerReady(true),
+            onStateChange: (event: { data: number }) => {
+              setPlayerState(mapYTPlayerState(event.data));
             },
-          } as YTPlayerOptions,
-        );
-      }
-      // Set up the callback only once
-      if (!(window as Window & typeof globalThis).onYouTubeIframeAPIReady) {
-        (window as Window & typeof globalThis).onYouTubeIframeAPIReady = () => {
-          createPlayerForCurrentPlaylist();
-        };
-      }
-      // If API is already loaded, create player immediately
-      if (hasYT(window)) {
+          },
+        } as YTPlayerOptions,
+      );
+    }
+    if (!(window as Window & typeof globalThis).onYouTubeIframeAPIReady) {
+      (window as Window & typeof globalThis).onYouTubeIframeAPIReady = () => {
         createPlayerForCurrentPlaylist();
-      }
-      return () => {
-        if (playerRef.current) {
-          playerRef.current.destroy?.();
-          playerRef.current = null;
-        }
-        setPlayerReady(false);
-        setPlayerState(null);
       };
-    },
-    [playlist],
-  );
+    }
+    if (hasYT(window)) {
+      createPlayerForCurrentPlaylist();
+    }
+    return () => {
+      if (playerRef.current) {
+        playerRef.current.destroy?.();
+        playerRef.current = null;
+      }
+      setPlayerReady(false);
+      setPlayerState(null);
+    };
+  }, [playlist]);
 
   return { playerRef, playerReady, playerDivId, playerState };
 }
