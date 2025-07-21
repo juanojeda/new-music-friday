@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Playlist } from '../libs/types';
-import { YTPlayer, YTPlayerOptions, YTPlayerConstructor } from '../libs/yt-types';
+import { YTPlayer } from '../libs/yt-types';
 import IconButton from '@mui/material/IconButton';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
@@ -11,18 +11,6 @@ import { useYouTubePlayer } from '../hooks/useYouTubePlayer';
 
 interface AudioPlayerProps {
   playlist: Playlist | null;
-}
-
-function hasYT(win: Window): win is Window & { YT: { Player: YTPlayerConstructor } } {
-  return 'YT' in win && typeof win.YT !== 'undefined';
-}
-
-function ensureYouTubeIframeAPILoaded() {
-  if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    document.body.appendChild(tag);
-  }
 }
 
 const handlePlayerAction =
@@ -45,7 +33,6 @@ function handleSeekArrowKey(player: YTPlayer | null, direction: 1 | -1) {
   player.seekTo(current + SEEK_STEP_SECONDS * direction, true);
 }
 
-// Extracted helper for player control buttons
 interface PlayerControlButtonProps {
   ariaLabel: string;
   icon: React.ReactNode;
