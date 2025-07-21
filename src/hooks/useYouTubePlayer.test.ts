@@ -23,6 +23,7 @@ describe('useYouTubePlayer', () => {
   let originalYT: { Player: YTPlayerConstructor } | undefined;
   let originalOnYouTubeIframeAPIReady: (() => void) | undefined;
   beforeEach(() => {
+    vi.useFakeTimers();
     originalYT = window.YT;
     originalOnYouTubeIframeAPIReady = window.onYouTubeIframeAPIReady;
     delete window.YT;
@@ -32,6 +33,7 @@ describe('useYouTubePlayer', () => {
       .forEach((s) => s.remove());
   });
   afterEach(() => {
+    vi.useRealTimers();
     window.YT = originalYT;
     window.onYouTubeIframeAPIReady = originalOnYouTubeIframeAPIReady;
     document
@@ -47,24 +49,21 @@ describe('useYouTubePlayer', () => {
     ).toBeInTheDocument();
   });
 
-  it('sets up playerRef and playerReady when window.YT is present and playlist is set', () => {
+  it('sets up playerRef and playerReady when window.YT is present and playlist is set', async () => {
+    vi.useRealTimers();
     const playMock = vi.fn();
     window.YT = {
       Player: vi.fn((_id, opts) => {
-        // Simulate onReady callback
         setTimeout(() => opts.events.onReady(), 0);
         return { destroy: vi.fn(), playVideo: playMock };
       }),
     };
     const { result } = renderHook(() => useYouTubePlayer(mockPlaylist));
-    // Simulate onReady
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        expect(result.current.playerRef.current).toBeTruthy();
-        expect(result.current.playerReady).toBe(true);
-        resolve();
-      }, 10);
+    await waitFor(() => {
+      expect(result.current.playerRef.current).toBeTruthy();
+      expect(result.current.playerReady).toBe(true);
     });
+    vi.useFakeTimers();
   });
 
   it('playerReady is false when no playlist', () => {
@@ -93,6 +92,7 @@ describe('useYouTubePlayer', () => {
   });
 
   it('exposes playerState as "playing" or "paused" when the player state changes', async () => {
+    vi.useRealTimers();
     let onStateChangeHandler: ((event: { data: number }) => void) | undefined;
     window.YT = {
       Player: vi.fn((_id, opts) => {
@@ -102,13 +102,11 @@ describe('useYouTubePlayer', () => {
       }),
     };
     const { result } = renderHook(() => useYouTubePlayer(mockPlaylist));
-    // Simulate player ready
-    await new Promise((resolve) => setTimeout(resolve, 10));
-    // Simulate playing state
+    await waitFor(() => result.current.playerRef.current);
     onStateChangeHandler && onStateChangeHandler({ data: 1 });
     await waitFor(() => expect(result.current.playerState).toBe<'playing' | 'paused'>('playing'));
-    // Simulate paused state
     onStateChangeHandler && onStateChangeHandler({ data: 2 });
     await waitFor(() => expect(result.current.playerState).toBe<'playing' | 'paused'>('paused'));
+    vi.useFakeTimers();
   });
 });

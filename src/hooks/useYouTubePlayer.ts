@@ -22,6 +22,26 @@ function mapYTPlayerState(data: number): PlayerState {
   return null;
 }
 
+function createPlayer(
+  playerRef: React.MutableRefObject<YTPlayer | null>,
+  playerDivId: React.RefObject<string>,
+  playlist: Playlist,
+  setPlayerReady: (ready: boolean) => void,
+  setPlayerState: (state: PlayerState) => void,
+) {
+  playerRef.current = new (window as Window & typeof globalThis).YT!.Player(playerDivId.current!, {
+    height: '0',
+    width: '0',
+    playerVars: { listType: 'playlist', list: playlist.id },
+    events: {
+      onReady: () => setPlayerReady(true),
+      onStateChange: (event: { data: number }) => {
+        setPlayerState(mapYTPlayerState(event.data));
+      },
+    },
+  } as YTPlayerOptions);
+}
+
 export type { PlayerState };
 export function useYouTubePlayer(playlist: Playlist | null) {
   const playerDivId = useRef(`yt-player-${Math.random().toString(36).slice(2)}`);
@@ -46,20 +66,7 @@ export function useYouTubePlayer(playlist: Playlist | null) {
       if (playerRef.current) return;
       const current = latestPlaylistRef.current;
       if (!current) return;
-      playerRef.current = new (window as Window & typeof globalThis).YT!.Player(
-        playerDivId.current,
-        {
-          height: '0',
-          width: '0',
-          playerVars: { listType: 'playlist', list: current.id },
-          events: {
-            onReady: () => setPlayerReady(true),
-            onStateChange: (event: { data: number }) => {
-              setPlayerState(mapYTPlayerState(event.data));
-            },
-          },
-        } as YTPlayerOptions,
-      );
+      createPlayer(playerRef, playerDivId, current, setPlayerReady, setPlayerState);
     }
     if (!(window as Window & typeof globalThis).onYouTubeIframeAPIReady) {
       (window as Window & typeof globalThis).onYouTubeIframeAPIReady = () => {
