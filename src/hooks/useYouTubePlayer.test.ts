@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { useYouTubePlayer } from './useYouTubePlayer';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Playlist } from '../libs/types';
@@ -19,25 +19,31 @@ declare global {
 }
 
 describe('useYouTubePlayer', () => {
-  let originalYT: any;
-  let originalOnYouTubeIframeAPIReady: any;
+  let originalYT: { Player: YTPlayerConstructor } | undefined;
+  let originalOnYouTubeIframeAPIReady: (() => void) | undefined;
   beforeEach(() => {
     originalYT = window.YT;
     originalOnYouTubeIframeAPIReady = window.onYouTubeIframeAPIReady;
     delete window.YT;
     delete window.onYouTubeIframeAPIReady;
-    document.querySelectorAll('script[src="https://www.youtube.com/iframe_api"]').forEach(s => s.remove());
+    document
+      .querySelectorAll('script[src="https://www.youtube.com/iframe_api"]')
+      .forEach((s) => s.remove());
   });
   afterEach(() => {
     window.YT = originalYT;
     window.onYouTubeIframeAPIReady = originalOnYouTubeIframeAPIReady;
-    document.querySelectorAll('script[src="https://www.youtube.com/iframe_api"]').forEach(s => s.remove());
+    document
+      .querySelectorAll('script[src="https://www.youtube.com/iframe_api"]')
+      .forEach((s) => s.remove());
   });
 
   it('injects the YouTube IFrame API script if not present', () => {
     expect(document.querySelector('script[src="https://www.youtube.com/iframe_api"]')).toBeNull();
     renderHook(() => useYouTubePlayer(mockPlaylist));
-    expect(document.querySelector('script[src="https://www.youtube.com/iframe_api"]')).toBeInTheDocument();
+    expect(
+      document.querySelector('script[src="https://www.youtube.com/iframe_api"]'),
+    ).toBeInTheDocument();
   });
 
   it('sets up playerRef and playerReady when window.YT is present and playlist is set', () => {
@@ -84,4 +90,4 @@ describe('useYouTubePlayer', () => {
     renderHook(() => useYouTubePlayer(mockPlaylist));
     expect(typeof window.onYouTubeIframeAPIReady).toBe('function');
   });
-}); 
+});

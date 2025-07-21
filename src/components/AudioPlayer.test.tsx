@@ -19,7 +19,6 @@ declare global {
   }
 }
 
-// Helper to create a playerMock and expose onReadyCallback
 function setupPlayerMock(overrides: Record<string, unknown> = {}) {
   let onReadyCallback: (() => void) | undefined;
   const playerMock = vi.fn((_id, opts) => {
@@ -63,7 +62,7 @@ describe('AudioPlayer', () => {
   });
 
   it('renders controls only after player is ready', async () => {
-    const { playerMock, onReadyCallback } = setupPlayerMock();
+    const { onReadyCallback } = setupPlayerMock();
     render(<AudioPlayer playlist={mockPlaylist} />);
     expect(screen.queryByRole('button', { name: /play/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /pause/i })).not.toBeInTheDocument();
@@ -189,9 +188,9 @@ describe('AudioPlayer', () => {
     expect(playerDiv).toBeInTheDocument();
     // Controls should not be visible until ready
     expect(screen.queryByRole('button', { name: /play/i })).not.toBeInTheDocument();
-    // Simulate player ready
+
     onReadyCallback() && onReadyCallback()!();
-    // Controls should now be visible
+
     expect(await screen.findByRole('button', { name: /play/i })).toBeInTheDocument();
     expect(await screen.findByRole('button', { name: /pause/i })).toBeInTheDocument();
   });
@@ -200,11 +199,8 @@ describe('AudioPlayer', () => {
     const { onReadyCallback } = setupPlayerMock();
     render(<AudioPlayer playlist={mockPlaylist} />);
     onReadyCallback() && onReadyCallback()!();
-    // The player container should have id and be present
+
     const playerDiv = document.querySelector('div[id^="yt-player-"]');
     expect(playerDiv).toBeInTheDocument();
-    // The actual iframe is injected by the YT API, but we can check the container
-    // Optionally, if the iframe is present, check its style
-    // For now, check the container exists (the hiding is handled by the hook)
   });
 });

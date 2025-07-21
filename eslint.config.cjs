@@ -2,7 +2,7 @@ const tsParser = require('@typescript-eslint/parser');
 
 module.exports = [
   {
-    ignores: ['legacy/**'],
+    ignores: ['legacy/**', 'dist/**'],
   },
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
@@ -20,6 +20,15 @@ module.exports = [
       'react/react-in-jsx-scope': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          ignoreRestSiblings: false,
+        },
+      ],
     },
     settings: {
       react: {
