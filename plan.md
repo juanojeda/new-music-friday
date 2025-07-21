@@ -15,24 +15,8 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Requirements File: [REQ-007-audio-player-controls-and-track-data.md](docs/requirements/REQ-007-audio-player-controls-and-track-data.md)
   - Atomic Tasks:
     - [x] FR-007.1: Next/Prev Controls
-    - [ ] FR-007.2: Play/Pause Toggle
+    - [x] FR-007.2: Play/Pause Toggle
     - [ ] FR-007.3: Playlist Track Data Display
-    - [ ] NFR-007.1: Accessibility (keyboard, ARIA labels, WCAG 2.1 AA)
-    - [ ] NFR-007.2: Material UI Compliance (all UI elements)
-
-- [ ] **ENH-002**: Unified audio player UX v2 (single player, playlist selection, track display)
-  - Priority: High
-  - Dependencies: ENH-001
-  - Status: Not Started
-  - Requirements File: [REQ-005-unified-audio-player-ux-v2.md](docs/requirements/REQ-005-unified-audio-player-ux-v2.md)
-
-### Documentation - Project Documentation and Decisions
-
-- [ ] **DOC-002**: ADR for improved architecture and tech stack (React, Material UI, standard tooling)
-  - Priority: High
-  - Dependencies: None
-  - Status: Accepted
-  - Requirements File: [ADR-002-architecture-and-tech-stack.md](docs/adr/ADR-002-architecture-and-tech-stack.md)
 
 ## Migration Plan - React, Material UI, and Standard Tooling
 
@@ -60,6 +44,7 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 - CF-002: Display playlists sorted by most recent
 - CF-003: Allow public playback of playlists (no login required)
 - ENH-001: Improved audio player experience using YouTube IFrame Player API
+- ENH-002: Unified audio player UX v2 (single player, playlist selection, track display)
 - MIG-001: Migrate static site generation logic to React (consider Next.js for SSR/SSG)
 - MIG-002: Rebuild audio player and playlist UI as React components using Material UI
 - INF-001: Set up new React project with Vite (or Create React App) — 2025-07-19
