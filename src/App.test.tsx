@@ -57,7 +57,6 @@ describe('App', () => {
     onReadyCallback && onReadyCallback();
     // Controls should now be rendered
     expect(await screen.findByRole('button', { name: /play/i })).toBeInTheDocument();
-    expect(await screen.findByRole('button', { name: /pause/i })).toBeInTheDocument();
     expect(await screen.findByRole('slider', { name: /seek/i })).toBeInTheDocument();
   });
 

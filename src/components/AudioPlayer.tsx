@@ -51,7 +51,7 @@ function PlayerControlButton({ ariaLabel, icon, action }: PlayerControlButtonPro
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
-  const { playerRef, playerReady, playerDivId } = useYouTubePlayer(playlist);
+  const { playerRef, playerReady, playerDivId, playerState } = useYouTubePlayer(playlist);
 
   if (!playlist) return null;
   return (
@@ -62,22 +62,26 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
           <PlayerControlButton
             ariaLabel="prev"
             icon={<SkipPreviousIcon />}
-            action={playerRef.current?.previousVideo}
+            action={() => playerRef.current?.previousVideo && playerRef.current.previousVideo()}
           />
-          <PlayerControlButton
-            ariaLabel="play"
-            icon={<PlayArrowIcon />}
-            action={playerRef.current?.playVideo}
-          />
-          <PlayerControlButton
-            ariaLabel="pause"
-            icon={<PauseIcon />}
-            action={playerRef.current?.pauseVideo}
-          />
+          {playerState !== 'playing' && (
+            <PlayerControlButton
+              ariaLabel="play"
+              icon={<PlayArrowIcon />}
+              action={() => playerRef.current?.playVideo && playerRef.current.playVideo()}
+            />
+          )}
+          {playerState === 'playing' && (
+            <PlayerControlButton
+              ariaLabel="pause"
+              icon={<PauseIcon />}
+              action={() => playerRef.current?.pauseVideo && playerRef.current.pauseVideo()}
+            />
+          )}
           <PlayerControlButton
             ariaLabel="next"
             icon={<SkipNextIcon />}
-            action={playerRef.current?.nextVideo}
+            action={() => playerRef.current?.nextVideo && playerRef.current.nextVideo()}
           />
           <Slider
             aria-label="seek"

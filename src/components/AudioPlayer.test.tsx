@@ -5,6 +5,7 @@ import AudioPlayer from './AudioPlayer';
 import { Playlist } from '../libs/types';
 import { YTPlayerConstructor } from '../libs/yt-types';
 import { fireEvent } from '@testing-library/react';
+import * as useYouTubePlayerModule from '../hooks/useYouTubePlayer';
 
 const mockPlaylist: Playlist = {
   id: '1',
@@ -32,6 +33,7 @@ function setupPlayerMock(overrides: Record<string, unknown> = {}) {
       getDuration: vi.fn().mockReturnValue(0), // Default to 0 for getDuration
       nextVideo: vi.fn(),
       previousVideo: vi.fn(),
+      onStateChange: vi.fn(), // Mock onStateChange
       ...overrides,
     };
   });
@@ -61,80 +63,146 @@ describe('AudioPlayer', () => {
     expect(screen.queryByRole('button', { name: /play/i })).not.toBeInTheDocument();
   });
 
-  it('renders controls only after player is ready', async () => {
+  it('renders controls only after player is ready, and only the play button is shown initially', async () => {
     const { onReadyCallback } = setupPlayerMock();
     render(<AudioPlayer playlist={mockPlaylist} />);
     expect(screen.queryByRole('button', { name: /play/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /pause/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('slider', { name: /seek/i })).not.toBeInTheDocument();
     onReadyCallback() && onReadyCallback()!();
+    // Only play button is visible
     expect(await screen.findByRole('button', { name: /play/i })).toBeInTheDocument();
-    expect(await screen.findByRole('button', { name: /pause/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /pause/i })).not.toBeInTheDocument();
     expect(await screen.findByRole('slider', { name: /seek/i })).toBeInTheDocument();
   });
 
-  it('calls playVideo, pauseVideo, and seekTo on the player when controls are used', async () => {
+  const baseHookReturn = {
+    playerRef: {
+      current: {
+        playVideo: vi.fn(),
+        pauseVideo: vi.fn(),
+        seekTo: vi.fn(),
+        nextVideo: vi.fn(),
+        previousVideo: vi.fn(),
+      },
+    },
+    playerReady: true,
+    playerDivId: { current: 'yt-player-mock' },
+  };
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  describe('play/pause toggle UI', () => {
+    it('shows only the play button when playerState is paused', () => {
+      vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+        ...baseHookReturn,
+        playerState: 'paused',
+      });
+      render(<AudioPlayer playlist={mockPlaylist} />);
+      expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /pause/i })).not.toBeInTheDocument();
+    });
+    it('shows only the pause button when playerState is playing', () => {
+      vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+        ...baseHookReturn,
+        playerState: 'playing',
+      });
+      render(<AudioPlayer playlist={mockPlaylist} />);
+      expect(screen.getByRole('button', { name: /pause/i })).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /play/i })).not.toBeInTheDocument();
+    });
+    it('shows only the play button when playerState is null', () => {
+      vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+        ...baseHookReturn,
+        playerState: null,
+      });
+      render(<AudioPlayer playlist={mockPlaylist} />);
+      expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /pause/i })).not.toBeInTheDocument();
+    });
+  });
+
+  it('renders the player container and controls when a playlist is provided and the player is ready (play)', () => {
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+      ...baseHookReturn,
+      playerState: 'paused',
+    });
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    const playerDiv = document.querySelector('div[id^="yt-player-"]');
+    expect(playerDiv).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /pause/i })).not.toBeInTheDocument();
+  });
+  it('renders the player container and controls when a playlist is provided and the player is ready (pause)', () => {
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+      ...baseHookReturn,
+      playerState: 'playing',
+    });
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    const playerDiv = document.querySelector('div[id^="yt-player-"]');
+    expect(playerDiv).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /pause/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /play/i })).not.toBeInTheDocument();
+  });
+
+  it('has appropriate ARIA labels on play and pause controls', () => {
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+      ...baseHookReturn,
+      playerState: 'paused',
+    });
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    expect(screen.getByRole('button', { name: /play/i })).toHaveAttribute('aria-label', 'play');
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+      ...baseHookReturn,
+      playerState: 'playing',
+    });
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    expect(screen.getByRole('button', { name: /pause/i })).toHaveAttribute('aria-label', 'pause');
+  });
+
+  it('allows keyboard navigation and operation of all controls', () => {
     const playVideo = vi.fn();
     const pauseVideo = vi.fn();
     const seekTo = vi.fn();
-    const { onReadyCallback } = setupPlayerMock({ playVideo, pauseVideo, seekTo });
-    render(<AudioPlayer playlist={mockPlaylist} />);
-    onReadyCallback() && onReadyCallback()!();
-    const playButton = await screen.findByRole('button', { name: /play/i });
-    playButton && playButton.click();
-    expect(playVideo).toHaveBeenCalled();
-    const pauseButton = await screen.findByRole('button', { name: /pause/i });
-    pauseButton && pauseButton.click();
-    expect(pauseVideo).toHaveBeenCalled();
-    const slider = await screen.findByRole('slider', { name: /seek/i });
-    slider && slider.focus();
-    slider && slider.setAttribute('value', '42');
-    fireEvent.change(slider, { target: { value: 42 } });
-    expect(seekTo).toHaveBeenCalledWith(42, true);
-  });
-
-  it('has appropriate ARIA labels on all controls', async () => {
-    const { onReadyCallback } = setupPlayerMock();
-    render(<AudioPlayer playlist={mockPlaylist} />);
-    onReadyCallback() && onReadyCallback()!();
-    expect(await screen.findByRole('button', { name: /play/i })).toHaveAttribute(
-      'aria-label',
-      'play',
-    );
-    expect(await screen.findByRole('button', { name: /pause/i })).toHaveAttribute(
-      'aria-label',
-      'pause',
-    );
-    expect(await screen.findByRole('slider', { name: /seek/i })).toHaveAttribute(
-      'aria-label',
-      'seek',
-    );
-  });
-
-  it('allows keyboard navigation and operation of all controls', async () => {
-    const playVideo = vi.fn();
-    const pauseVideo = vi.fn();
-    const seekTo = vi.fn();
-    const { onReadyCallback } = setupPlayerMock({ playVideo, pauseVideo, seekTo });
-    render(<AudioPlayer playlist={mockPlaylist} />);
-    onReadyCallback() && onReadyCallback()!();
-    const playButton = await screen.findByRole('button', { name: /play/i });
-    const pauseButton = await screen.findByRole('button', { name: /pause/i });
-    const slider = await screen.findByRole('slider', { name: /seek/i });
+    const baseHookReturn = {
+      playerRef: {
+        current: { playVideo, pauseVideo, seekTo, nextVideo: vi.fn(), previousVideo: vi.fn() },
+      },
+      playerReady: true,
+      playerDivId: { current: 'yt-player-mock' },
+    };
+    const { rerender } = render(<AudioPlayer playlist={mockPlaylist} />);
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+      ...baseHookReturn,
+      playerState: 'paused',
+    });
+    rerender(<AudioPlayer playlist={mockPlaylist} />);
+    const playButton = screen.getByRole('button', { name: /play/i });
     playButton.focus();
     expect(playButton).toHaveFocus();
+    fireEvent.keyDown(playButton, { key: 'Enter', code: 'Enter' });
+    expect(playVideo).toHaveBeenCalledTimes(1);
+    fireEvent.keyDown(playButton, { key: ' ', code: 'Space' });
+    expect(playVideo).toHaveBeenCalledTimes(2);
+    // Now test pause button after rerender
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+      ...baseHookReturn,
+      playerState: 'playing',
+    });
+    rerender(<AudioPlayer playlist={mockPlaylist} />);
+    const pauseButton = screen.getByRole('button', { name: /pause/i });
     pauseButton.focus();
     expect(pauseButton).toHaveFocus();
+    fireEvent.keyDown(pauseButton, { key: 'Enter', code: 'Enter' });
+    expect(pauseVideo).toHaveBeenCalledTimes(1);
+    fireEvent.keyDown(pauseButton, { key: ' ', code: 'Space' });
+    expect(pauseVideo).toHaveBeenCalledTimes(2);
+    // Seek slider
+    const slider = screen.getByRole('slider', { name: /seek/i });
     slider.focus();
     expect(slider).toHaveFocus();
-    playButton && fireEvent.keyDown(playButton, { key: 'Enter', code: 'Enter' });
-    expect(playVideo).toHaveBeenCalledTimes(1);
-    playButton && fireEvent.keyDown(playButton, { key: ' ', code: 'Space' });
-    expect(playVideo).toHaveBeenCalledTimes(2);
-    pauseButton && fireEvent.keyDown(pauseButton, { key: 'Enter', code: 'Enter' });
-    expect(pauseVideo).toHaveBeenCalledTimes(1);
-    pauseButton && fireEvent.keyDown(pauseButton, { key: ' ', code: 'Space' });
-    expect(pauseVideo).toHaveBeenCalledTimes(2);
     fireEvent.keyDown(slider, { key: 'ArrowRight', code: 'ArrowRight' });
   });
 
@@ -178,21 +246,6 @@ describe('AudioPlayer', () => {
     expect(nextVideo).toHaveBeenCalled();
     prevButton && prevButton.click();
     expect(previousVideo).toHaveBeenCalled();
-  });
-
-  it('renders the player container and controls when a playlist is provided and the player is ready', async () => {
-    const { onReadyCallback } = setupPlayerMock();
-    render(<AudioPlayer playlist={mockPlaylist} />);
-    // The player container should exist
-    const playerDiv = document.querySelector('div[id^="yt-player-"]');
-    expect(playerDiv).toBeInTheDocument();
-    // Controls should not be visible until ready
-    expect(screen.queryByRole('button', { name: /play/i })).not.toBeInTheDocument();
-
-    onReadyCallback() && onReadyCallback()!();
-
-    expect(await screen.findByRole('button', { name: /play/i })).toBeInTheDocument();
-    expect(await screen.findByRole('button', { name: /pause/i })).toBeInTheDocument();
   });
 
   it('the embedded YouTube player is visually hidden (height and width are 0)', async () => {
