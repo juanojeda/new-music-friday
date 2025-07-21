@@ -1,0 +1,40 @@
+name: Weekly Playlist Fetch
+
+on:
+  schedule:
+    - cron: '0 6 * * 5' # Every Friday at 6:00 UTC
+  workflow_dispatch:
+
+jobs:
+  fetch-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch latest playlists
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: npm run fetch-playlists
+
+      - name: Commit and push if playlists changed
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          if [[ `git status --porcelain public/playlists.nmf.json` ]]; then
+            git add public/playlists.nmf.json
+            git commit -m "chore: update playlists.nmf.json [skip ci]"
+            git push
+          fi
+
+      - name: Trigger site deploy
+        if: success()
+        run: echo "Site deploy should be triggered by push to main branch." 
