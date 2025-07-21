@@ -116,6 +116,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
           />
           <Slider
             aria-label="seek"
+            value={playhead}
             onChange={(_, value) => {
               if (typeof value === 'number')
                 playerRef.current?.seekTo && playerRef.current.seekTo(value, true);

@@ -282,4 +282,39 @@ describe('AudioPlayer', () => {
     expect(screen.getByText(/4:05/)).toBeInTheDocument(); // 245s = 4:05
     expect(screen.getByText(/2:03/)).toBeInTheDocument(); // 123s = 2:03
   });
+
+  it('updates the playhead in the UI and seeker slider when the playhead value changes (playhead sync)', () => {
+    const baseHookReturn: ReturnType<typeof useYouTubePlayerModule.useYouTubePlayer> = {
+      playerRef: {
+        current: {
+          playVideo: vi.fn(),
+          pauseVideo: vi.fn(),
+          seekTo: vi.fn(),
+          nextVideo: vi.fn(),
+          previousVideo: vi.fn(),
+        },
+      },
+      playerReady: true,
+      playerDivId: { current: 'yt-player-mock' },
+      playerState: 'playing',
+      currentTrackIndex: 0,
+      totalTracks: 1,
+      currentTrack: { artist: 'Test Artist', title: 'Test Title', length: 245 },
+      playhead: 10,
+    };
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue(baseHookReturn);
+    const { rerender } = render(<AudioPlayer playlist={mockPlaylist} />);
+    expect(screen.getByTestId('track-playhead').textContent).toBe('0:10');
+    const slider = screen.getByRole('slider', { name: /seek/i }) as HTMLInputElement;
+    expect(slider.value).toBe('10');
+    // Simulate playhead update
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+      ...baseHookReturn,
+      playhead: 42,
+    });
+    rerender(<AudioPlayer playlist={mockPlaylist} />);
+    expect(screen.getByTestId('track-playhead').textContent).toBe('0:42');
+    const slider2 = screen.getByRole('slider', { name: /seek/i }) as HTMLInputElement;
+    expect(slider2.value).toBe('42');
+  });
 });
