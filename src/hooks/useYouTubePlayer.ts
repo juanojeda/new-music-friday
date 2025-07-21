@@ -50,6 +50,11 @@ export function useYouTubePlayer(playlist: Playlist | null) {
   const [playerReady, setPlayerReady] = useState(false);
   const [playerState, setPlayerState] = useState<PlayerState>(null);
 
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [totalTracks, setTotalTracks] = useState(0);
+  const [currentTrack, setCurrentTrack] = useState({ artist: '', title: '', length: 0 });
+  const [playhead, setPlayhead] = useState(0);
+
   useEffect(() => {
     latestPlaylistRef.current = playlist;
   }, [playlist]);
@@ -83,10 +88,44 @@ export function useYouTubePlayer(playlist: Playlist | null) {
       }
       setPlayerReady(false);
       setPlayerState(null);
+      setCurrentTrackIndex(0);
+      setTotalTracks(0);
+      setCurrentTrack({ artist: '', title: '', length: 0 });
+      setPlayhead(0);
     };
   }, [playlist]);
 
-  return { playerRef, playerReady, playerDivId, playerState };
+  useEffect(() => {
+    if (!playerReady || !playerRef.current) return;
+    function updateTrackData() {
+      const idx = playerRef.current?.getPlaylistIndex?.() ?? 0;
+      setCurrentTrackIndex(idx);
+      const playlistArray = playerRef.current?.getPlaylist?.() ?? [];
+      setTotalTracks(Array.isArray(playlistArray) ? playlistArray.length : 0);
+      const videoData = playerRef.current?.getVideoData?.() ?? {};
+      setCurrentTrack({
+        artist: videoData.author ?? '',
+        title: videoData.title ?? '',
+        length: typeof videoData.lengthSeconds === 'number' ? videoData.lengthSeconds : 0,
+      });
+      setPlayhead(playerRef.current?.getCurrentTime?.() ?? 0);
+    }
+    updateTrackData();
+    // Optionally, set up an interval to update playhead
+    const interval = setInterval(updateTrackData, 1000);
+    return () => clearInterval(interval);
+  }, [playerReady, playerState]);
+
+  return {
+    playerRef,
+    playerReady,
+    playerDivId,
+    playerState,
+    currentTrackIndex,
+    totalTracks,
+    currentTrack,
+    playhead,
+  };
 }
 
 // Test skeleton for the hook

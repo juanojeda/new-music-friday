@@ -92,6 +92,10 @@ describe('AudioPlayer', () => {
         playerReady: true,
         playerDivId: { current: 'yt-player-mock' },
         playerState: null,
+        currentTrackIndex: 0,
+        totalTracks: 1,
+        currentTrack: { artist: '', title: '', length: 0 },
+        playhead: 0,
       };
     });
     it('shows only the play button when playerState is paused (UI test)', () => {
@@ -121,6 +125,20 @@ describe('AudioPlayer', () => {
       expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
       expect(screen.queryByRole('button', { name: /pause/i })).not.toBeInTheDocument();
     });
+    it('has appropriate ARIA labels on play and pause controls (integration)', () => {
+      vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+        ...baseHookReturn,
+        playerState: 'paused',
+      });
+      render(<AudioPlayer playlist={mockPlaylist} />);
+      expect(screen.getByRole('button', { name: /play/i })).toHaveAttribute('aria-label', 'play');
+      vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+        ...baseHookReturn,
+        playerState: 'playing',
+      });
+      render(<AudioPlayer playlist={mockPlaylist} />);
+      expect(screen.getByRole('button', { name: /pause/i })).toHaveAttribute('aria-label', 'pause');
+    });
   });
 
   it('renders the player container and controls when a playlist is provided and the player is ready (integration)', () => {
@@ -137,6 +155,10 @@ describe('AudioPlayer', () => {
       playerReady: true,
       playerDivId: { current: 'yt-player-mock' },
       playerState: 'paused',
+      currentTrackIndex: 0,
+      totalTracks: 1,
+      currentTrack: { artist: '', title: '', length: 0 },
+      playhead: 0,
     };
     vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue(baseHookReturn);
     render(<AudioPlayer playlist={mockPlaylist} />);
@@ -159,6 +181,10 @@ describe('AudioPlayer', () => {
       playerReady: true,
       playerDivId: { current: 'yt-player-mock' },
       playerState: 'playing',
+      currentTrackIndex: 0,
+      totalTracks: 1,
+      currentTrack: { artist: '', title: '', length: 0 },
+      playhead: 0,
     };
     vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue(baseHookReturn);
     render(<AudioPlayer playlist={mockPlaylist} />);
@@ -167,33 +193,6 @@ describe('AudioPlayer', () => {
     expect(screen.getByRole('button', { name: /pause/i })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /play/i })).not.toBeInTheDocument();
   });
-  it('has appropriate ARIA labels on play and pause controls (integration)', () => {
-    const baseHookReturn: ReturnType<typeof useYouTubePlayerModule.useYouTubePlayer> = {
-      playerRef: {
-        current: {
-          playVideo: vi.fn(),
-          pauseVideo: vi.fn(),
-          seekTo: vi.fn(),
-          nextVideo: vi.fn(),
-          previousVideo: vi.fn(),
-        },
-      },
-      playerReady: true,
-      playerDivId: { current: 'yt-player-mock' },
-      playerState: 'paused',
-    };
-    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue(baseHookReturn);
-    render(<AudioPlayer playlist={mockPlaylist} />);
-    expect(screen.getByRole('button', { name: /play/i })).toHaveAttribute('aria-label', 'play');
-    const baseHookReturnPlaying: ReturnType<typeof useYouTubePlayerModule.useYouTubePlayer> = {
-      ...baseHookReturn,
-      playerState: 'playing',
-    };
-    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue(baseHookReturnPlaying);
-    render(<AudioPlayer playlist={mockPlaylist} />);
-    expect(screen.getByRole('button', { name: /pause/i })).toHaveAttribute('aria-label', 'pause');
-  });
-
   it('allows keyboard navigation and operation of all controls', () => {
     const playVideo = vi.fn();
     const pauseVideo = vi.fn();
@@ -204,6 +203,10 @@ describe('AudioPlayer', () => {
       },
       playerReady: true,
       playerDivId: { current: 'yt-player-mock' },
+      currentTrackIndex: 0,
+      totalTracks: 1,
+      currentTrack: { artist: '', title: '', length: 0 },
+      playhead: 0,
     };
     const { rerender } = render(<AudioPlayer playlist={mockPlaylist} />);
     vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
@@ -245,5 +248,38 @@ describe('AudioPlayer', () => {
 
     const playerDiv = document.querySelector('div[id^="yt-player-"]');
     expect(playerDiv).toBeInTheDocument();
+  });
+
+  it('displays current track number, total tracks, artist, title, length, and playhead (UI test)', () => {
+    const baseHookReturn: ReturnType<typeof useYouTubePlayerModule.useYouTubePlayer> = {
+      playerRef: {
+        current: {
+          playVideo: vi.fn(),
+          pauseVideo: vi.fn(),
+          seekTo: vi.fn(),
+          nextVideo: vi.fn(),
+          previousVideo: vi.fn(),
+        },
+      },
+      playerReady: true,
+      playerDivId: { current: 'yt-player-mock' },
+      playerState: 'playing',
+      // Add mock track data for display
+      currentTrackIndex: 2,
+      totalTracks: 12,
+      currentTrack: {
+        artist: 'Test Artist',
+        title: 'Test Title',
+        length: 245,
+      },
+      playhead: 123,
+    };
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue(baseHookReturn);
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    expect(screen.getByText(/Track 3 of 12/i)).toBeInTheDocument();
+    expect(screen.getByText(/Test Artist/i)).toBeInTheDocument();
+    expect(screen.getByText(/Test Title/i)).toBeInTheDocument();
+    expect(screen.getByText(/4:05/)).toBeInTheDocument(); // 245s = 4:05
+    expect(screen.getByText(/2:03/)).toBeInTheDocument(); // 123s = 2:03
   });
 });

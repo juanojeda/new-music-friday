@@ -8,6 +8,7 @@ import Slider from '@mui/material/Slider';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import { useYouTubePlayer } from '../hooks/useYouTubePlayer';
+import Typography from '@mui/material/Typography';
 
 interface AudioPlayerProps {
   playlist: Playlist | null;
@@ -33,6 +34,12 @@ function handleSeekArrowKey(player: YTPlayer | null, direction: 1 | -1) {
   player.seekTo(current + SEEK_STEP_SECONDS * direction, true);
 }
 
+function formatTime(seconds: number) {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
 interface PlayerControlButtonProps {
   ariaLabel: string;
   icon: React.ReactNode;
@@ -51,7 +58,16 @@ function PlayerControlButton({ ariaLabel, icon, action }: PlayerControlButtonPro
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
-  const { playerRef, playerReady, playerDivId, playerState } = useYouTubePlayer(playlist);
+  const {
+    playerRef,
+    playerReady,
+    playerDivId,
+    playerState,
+    currentTrackIndex,
+    totalTracks,
+    currentTrack,
+    playhead,
+  } = useYouTubePlayer(playlist);
 
   if (!playlist) return null;
   return (
@@ -59,6 +75,21 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
       <div id={playerDivId.current} />
       {playerReady && (
         <>
+          <Typography variant="subtitle2" data-testid="track-number">
+            {`Track ${currentTrackIndex + 1} of ${totalTracks}`}
+          </Typography>
+          <Typography variant="subtitle1" data-testid="track-title">
+            {currentTrack.title}
+          </Typography>
+          <Typography variant="subtitle2" data-testid="track-artist">
+            {currentTrack.artist}
+          </Typography>
+          <Typography variant="caption" data-testid="track-length">
+            {formatTime(currentTrack.length)}
+          </Typography>
+          <Typography variant="caption" data-testid="track-playhead">
+            {formatTime(playhead)}
+          </Typography>
           <PlayerControlButton
             ariaLabel="prev"
             icon={<SkipPreviousIcon />}

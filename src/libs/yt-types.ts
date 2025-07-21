@@ -8,6 +8,9 @@ export interface YTPlayer {
   getDuration?: () => number;
   nextVideo?: () => void;
   previousVideo?: () => void;
+  getPlaylist?: () => string[];
+  getPlaylistIndex?: () => number;
+  getVideoData?: () => { author?: string; title?: string; lengthSeconds?: number };
 }
 export interface YTPlayerOptions {
   height: string;

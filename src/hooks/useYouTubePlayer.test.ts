@@ -109,4 +109,40 @@ describe('useYouTubePlayer', () => {
     await waitFor(() => expect(result.current.playerState).toBe<'playing' | 'paused'>('paused'));
     vi.useFakeTimers();
   });
+
+  it('exposes currentTrackIndex, totalTracks, currentTrack (artist, title, length), and playhead', async () => {
+    vi.useRealTimers();
+    const getPlaylist = () => ({
+      getPlaylist: vi.fn().mockReturnValue(['id1', 'id2', 'id3']),
+      getPlaylistIndex: vi.fn().mockReturnValue(1),
+      getVideoData: vi.fn().mockReturnValue({
+        author: 'Test Artist',
+        title: 'Test Title',
+        lengthSeconds: 245,
+      }),
+      getCurrentTime: vi.fn().mockReturnValue(123),
+    });
+    window.YT = {
+      Player: vi.fn((_id, opts) => {
+        setTimeout(() => opts.events.onReady(), 0);
+        return {
+          destroy: vi.fn(),
+          ...getPlaylist(),
+        };
+      }),
+    };
+    const { result } = renderHook(() => useYouTubePlayer(mockPlaylist));
+    await waitFor(() => result.current.playerRef.current);
+    await waitFor(() => expect(result.current.currentTrackIndex).toBe(1));
+    await waitFor(() => expect(result.current.totalTracks).toBe(3));
+    await waitFor(() =>
+      expect(result.current.currentTrack).toEqual({
+        artist: 'Test Artist',
+        title: 'Test Title',
+        length: 245,
+      }),
+    );
+    await waitFor(() => expect(result.current.playhead).toBe(123));
+    vi.useFakeTimers();
+  });
 });
