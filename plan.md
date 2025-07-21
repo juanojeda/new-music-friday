@@ -13,6 +13,12 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Dependencies: ENH-002, MIG-002
   - Status: Not Started
   - Requirements File: [REQ-007-audio-player-controls-and-track-data.md](docs/requirements/REQ-007-audio-player-controls-and-track-data.md)
+  - Atomic Tasks:
+    - [x] FR-007.1: Next/Prev Controls
+    - [ ] FR-007.2: Play/Pause Toggle
+    - [ ] FR-007.3: Playlist Track Data Display
+    - [ ] NFR-007.1: Accessibility (keyboard, ARIA labels, WCAG 2.1 AA)
+    - [ ] NFR-007.2: Material UI Compliance (all UI elements)
 
 - [ ] **ENH-002**: Unified audio player UX v2 (single player, playlist selection, track display)
   - Priority: High
