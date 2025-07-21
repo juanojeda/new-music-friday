@@ -11,7 +11,8 @@
     "format": "prettier --write --list-different .",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "validate": "npm run format; npm run test -- --run; npm run typecheck; npm run lint"
+    "validate": "npm run format; npm run test -- --run; npm run typecheck; npm run lint",
+    "fetch-playlists": "tsx scripts/fetch-playlists.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -31,6 +32,7 @@
     "@typescript-eslint/eslint-plugin": "^8.37.0",
     "@typescript-eslint/parser": "^8.37.0",
     "@vitejs/plugin-react": "^4.6.0",
+    "dotenv": "^17.2.0",
     "eslint": "^9.31.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
@@ -39,6 +41,7 @@
     "globals": "^16.3.0",
     "jsdom": "^26.1.0",
     "prettier": "^3.6.2",
+    "tsx": "^4.20.3",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
     "vite": "^7.0.4",
