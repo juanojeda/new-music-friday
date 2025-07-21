@@ -32,11 +32,11 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 
 ### Core Features Migration
 
-- [ ] **MIG-002**: Rebuild audio player and playlist UI as React components using Material UI
+- [ ] **REQ-008**: Migrate playlist fetching logic to React/Vite infrastructure
   - Priority: High
   - Dependencies: MIG-001, INF-002
-  - Status: Completed
-  - Requirements File: [REQ-MIG-002-audio-player-playlist-ui.md](docs/requirements/REQ-MIG-002-audio-player-playlist-ui.md)
+  - Status: Not Started
+  - Requirements File: [REQ-008-migrate-playlist-fetching-to-react.md](docs/requirements/REQ-008-migrate-playlist-fetching-to-react.md)
 - [ ] **MIG-003**: Write tests for all new React components (React Testing Library, Jest)
   - Priority: High
   - Dependencies: MIG-002
