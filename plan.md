@@ -6,18 +6,6 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 
 ## Work Items
 
-### Core Features - Essential functionality for the MVP
-
-- [ ] **ENH-003**: Audio Player Controls and Track Data Improvements
-  - Priority: Critical
-  - Dependencies: ENH-002, MIG-002
-  - Status: Not Started
-  - Requirements File: [REQ-007-audio-player-controls-and-track-data.md](docs/requirements/REQ-007-audio-player-controls-and-track-data.md)
-  - Atomic Tasks:
-    - [x] FR-007.1: Next/Prev Controls
-    - [x] FR-007.2: Play/Pause Toggle
-    - [x] FR-007.3: Playlist Track Data Display
-
 ## Migration Plan - React, Material UI, and Standard Tooling
 
 ### Core Features Migration
@@ -46,14 +34,6 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 - ENH-001: Improved audio player experience using YouTube IFrame Player API
 - ENH-002: Unified audio player UX v2 (single player, playlist selection, track display)
 - ENH-003: Audio Player Controls and Track Data Improvements — 2024-07-19
-  - Priority: Critical
-  - Dependencies: ENH-002, MIG-002
-  - Status: Completed
-  - Requirements File: [REQ-007-audio-player-controls-and-track-data.md](docs/requirements/REQ-007-audio-player-controls-and-track-data.md)
-  - Atomic Tasks:
-    - [x] FR-007.1: Next/Prev Controls
-    - [x] FR-007.2: Play/Pause Toggle
-    - [x] FR-007.3: Playlist Track Data Display
 - MIG-001: Migrate static site generation logic to React (consider Next.js for SSR/SSG)
 - MIG-002: Rebuild audio player and playlist UI as React components using Material UI
 - INF-001: Set up new React project with Vite (or Create React App) — 2025-07-19
