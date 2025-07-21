@@ -31,6 +31,8 @@ function setupPlayerMock(overrides: Record<string, unknown> = {}) {
       seekTo: vi.fn(),
       getCurrentTime: vi.fn().mockReturnValue(0), // Default to 0 for getCurrentTime
       getDuration: vi.fn().mockReturnValue(0), // Default to 0 for getDuration
+      nextVideo: vi.fn(),
+      previousVideo: vi.fn(),
       ...overrides,
     };
   });
@@ -185,5 +187,21 @@ describe('AudioPlayer', () => {
     // Simulate left arrow (backward 5s)
     fireEvent.keyDown(slider, { key: 'ArrowLeft', code: 'ArrowLeft' });
     expect(seekTo).toHaveBeenCalledWith(25, true);
+  });
+
+  it('renders Next and Previous buttons and calls nextVideo/previousVideo on click', async () => {
+    const nextVideo = vi.fn();
+    const previousVideo = vi.fn();
+    const { onReadyCallback } = setupPlayerMock({ nextVideo, previousVideo });
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    onReadyCallback() && onReadyCallback()!();
+    const nextButton = await screen.findByRole('button', { name: /next/i });
+    const prevButton = await screen.findByRole('button', { name: /prev/i });
+    expect(nextButton).toBeInTheDocument();
+    expect(prevButton).toBeInTheDocument();
+    nextButton && nextButton.click();
+    expect(nextVideo).toHaveBeenCalled();
+    prevButton && prevButton.click();
+    expect(previousVideo).toHaveBeenCalled();
   });
 });

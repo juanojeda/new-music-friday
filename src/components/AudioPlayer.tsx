@@ -5,6 +5,8 @@ import IconButton from '@mui/material/IconButton';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import Slider from '@mui/material/Slider';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 
 interface AudioPlayerProps {
   playlist: Playlist | null;
@@ -111,6 +113,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
       {playerReady && (
         <>
           <IconButton
+            aria-label="prev"
+            onClick={handlePlayerAction(playerRef.current?.previousVideo)}
+            onKeyDown={handlePlayerAction(playerRef.current?.previousVideo)}
+          >
+            <SkipPreviousIcon />
+          </IconButton>
+          <IconButton
             aria-label="play"
             onClick={handlePlayerAction(playerRef.current?.playVideo)}
             onKeyDown={handlePlayerAction(playerRef.current?.playVideo)}
@@ -123,6 +132,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
             onKeyDown={handlePlayerAction(playerRef.current?.pauseVideo)}
           >
             <PauseIcon />
+          </IconButton>
+          <IconButton
+            aria-label="next"
+            onClick={handlePlayerAction(playerRef.current?.nextVideo)}
+            onKeyDown={handlePlayerAction(playerRef.current?.nextVideo)}
+          >
+            <SkipNextIcon />
           </IconButton>
           <Slider
             aria-label="seek"

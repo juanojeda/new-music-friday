@@ -6,6 +6,8 @@ export interface YTPlayer {
   seekTo?: (seconds: number, allowSeekAhead: boolean) => void;
   getCurrentTime?: () => number;
   getDuration?: () => number;
+  nextVideo?: () => void;
+  previousVideo?: () => void;
 }
 export interface YTPlayerOptions {
   height: string;
