@@ -44,6 +44,24 @@ function handleSeekArrowKey(player: YTPlayer | null, direction: 1 | -1) {
   player.seekTo(current + SEEK_STEP_SECONDS * direction, true);
 }
 
+// Extracted helper for player control buttons
+interface PlayerControlButtonProps {
+  ariaLabel: string;
+  icon: React.ReactNode;
+  action: (() => void) | undefined;
+}
+function PlayerControlButton({ ariaLabel, icon, action }: PlayerControlButtonProps) {
+  return (
+    <IconButton
+      aria-label={ariaLabel}
+      onClick={handlePlayerAction(action)}
+      onKeyDown={handlePlayerAction(action)}
+    >
+      {icon}
+    </IconButton>
+  );
+}
+
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
   const playerDivId = useRef(`yt-player-${Math.random().toString(36).slice(2)}`);
   const playerRef = useRef<YTPlayer | null>(null);
@@ -112,34 +130,26 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
       <div id={playerDivId.current} />
       {playerReady && (
         <>
-          <IconButton
-            aria-label="prev"
-            onClick={handlePlayerAction(playerRef.current?.previousVideo)}
-            onKeyDown={handlePlayerAction(playerRef.current?.previousVideo)}
-          >
-            <SkipPreviousIcon />
-          </IconButton>
-          <IconButton
-            aria-label="play"
-            onClick={handlePlayerAction(playerRef.current?.playVideo)}
-            onKeyDown={handlePlayerAction(playerRef.current?.playVideo)}
-          >
-            <PlayArrowIcon />
-          </IconButton>
-          <IconButton
-            aria-label="pause"
-            onClick={handlePlayerAction(playerRef.current?.pauseVideo)}
-            onKeyDown={handlePlayerAction(playerRef.current?.pauseVideo)}
-          >
-            <PauseIcon />
-          </IconButton>
-          <IconButton
-            aria-label="next"
-            onClick={handlePlayerAction(playerRef.current?.nextVideo)}
-            onKeyDown={handlePlayerAction(playerRef.current?.nextVideo)}
-          >
-            <SkipNextIcon />
-          </IconButton>
+          <PlayerControlButton
+            ariaLabel="prev"
+            icon={<SkipPreviousIcon />}
+            action={playerRef.current?.previousVideo}
+          />
+          <PlayerControlButton
+            ariaLabel="play"
+            icon={<PlayArrowIcon />}
+            action={playerRef.current?.playVideo}
+          />
+          <PlayerControlButton
+            ariaLabel="pause"
+            icon={<PauseIcon />}
+            action={playerRef.current?.pauseVideo}
+          />
+          <PlayerControlButton
+            ariaLabel="next"
+            icon={<SkipNextIcon />}
+            action={playerRef.current?.nextVideo}
+          />
           <Slider
             aria-label="seek"
             onChange={(_, value) => {
