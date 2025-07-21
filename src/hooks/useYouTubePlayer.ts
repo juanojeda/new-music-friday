@@ -53,6 +53,7 @@ export function useYouTubePlayer(playlist: Playlist | null) {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [totalTracks, setTotalTracks] = useState(0);
   const [currentTrack, setCurrentTrack] = useState({ artist: '', title: '', length: 0 });
+  const [duration, setDuration] = useState(0);
   const [playhead, setPlayhead] = useState(0);
 
   useEffect(() => {
@@ -106,8 +107,9 @@ export function useYouTubePlayer(playlist: Playlist | null) {
       setCurrentTrack({
         artist: videoData.author ?? '',
         title: videoData.title ?? '',
-        length: typeof videoData.lengthSeconds === 'number' ? videoData.lengthSeconds : 0,
+        length: playerRef.current?.getDuration?.() ?? 0,
       });
+      setDuration(playerRef.current?.getDuration?.() ?? 0);
       setPlayhead(playerRef.current?.getCurrentTime?.() ?? 0);
     }
     updateTrackData();
@@ -125,6 +127,7 @@ export function useYouTubePlayer(playlist: Playlist | null) {
     totalTracks,
     currentTrack,
     playhead,
+    duration,
   };
 }
 

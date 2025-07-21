@@ -121,6 +121,7 @@ describe('useYouTubePlayer', () => {
         lengthSeconds: 245,
       }),
       getCurrentTime: vi.fn().mockReturnValue(123),
+      getDuration: vi.fn().mockReturnValue(245),
     });
     window.YT = {
       Player: vi.fn((_id, opts) => {
@@ -143,6 +144,7 @@ describe('useYouTubePlayer', () => {
       }),
     );
     await waitFor(() => expect(result.current.playhead).toBe(123));
+    await waitFor(() => expect(result.current.duration).toBe(245));
     vi.useFakeTimers();
   });
 });

@@ -64,12 +64,49 @@ describe('AudioPlayer', () => {
   });
 
   it('renders controls only after player is ready, and only the play button is shown initially', async () => {
-    const { onReadyCallback } = setupPlayerMock();
-    render(<AudioPlayer playlist={mockPlaylist} />);
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+      playerRef: {
+        current: {
+          playVideo: vi.fn(),
+          pauseVideo: vi.fn(),
+          seekTo: vi.fn(),
+          nextVideo: vi.fn(),
+          previousVideo: vi.fn(),
+        },
+      },
+      playerReady: false,
+      playerDivId: { current: 'yt-player-mock' },
+      playerState: null,
+      currentTrackIndex: 0,
+      totalTracks: 1,
+      currentTrack: { artist: '', title: '', length: 0 },
+      playhead: 0,
+      duration: 0,
+    });
+    const { rerender } = render(<AudioPlayer playlist={mockPlaylist} />);
     expect(screen.queryByRole('button', { name: /play/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /pause/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('slider', { name: /seek/i })).not.toBeInTheDocument();
-    onReadyCallback() && onReadyCallback()!();
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+      playerRef: {
+        current: {
+          playVideo: vi.fn(),
+          pauseVideo: vi.fn(),
+          seekTo: vi.fn(),
+          nextVideo: vi.fn(),
+          previousVideo: vi.fn(),
+        },
+      },
+      playerReady: true,
+      playerDivId: { current: 'yt-player-mock' },
+      playerState: null,
+      currentTrackIndex: 0,
+      totalTracks: 1,
+      currentTrack: { artist: '', title: '', length: 0 },
+      playhead: 0,
+      duration: 245,
+    });
+    rerender(<AudioPlayer playlist={mockPlaylist} />);
     // Only play button is visible
     expect(await screen.findByRole('button', { name: /play/i })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /pause/i })).not.toBeInTheDocument();
@@ -96,12 +133,14 @@ describe('AudioPlayer', () => {
         totalTracks: 1,
         currentTrack: { artist: '', title: '', length: 0 },
         playhead: 0,
+        duration: 245,
       };
     });
     it('shows only the play button when playerState is paused (UI test)', () => {
       vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
         ...baseHookReturn,
         playerState: 'paused',
+        duration: baseHookReturn.currentTrack.length,
       });
       render(<AudioPlayer playlist={mockPlaylist} />);
       expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
@@ -111,6 +150,7 @@ describe('AudioPlayer', () => {
       vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
         ...baseHookReturn,
         playerState: 'playing',
+        duration: baseHookReturn.currentTrack.length,
       });
       render(<AudioPlayer playlist={mockPlaylist} />);
       expect(screen.getByRole('button', { name: /pause/i })).toBeInTheDocument();
@@ -120,6 +160,7 @@ describe('AudioPlayer', () => {
       vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
         ...baseHookReturn,
         playerState: null,
+        duration: baseHookReturn.currentTrack.length,
       });
       render(<AudioPlayer playlist={mockPlaylist} />);
       expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
@@ -129,12 +170,14 @@ describe('AudioPlayer', () => {
       vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
         ...baseHookReturn,
         playerState: 'paused',
+        duration: baseHookReturn.currentTrack.length,
       });
       render(<AudioPlayer playlist={mockPlaylist} />);
       expect(screen.getByRole('button', { name: /play/i })).toHaveAttribute('aria-label', 'play');
       vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
         ...baseHookReturn,
         playerState: 'playing',
+        duration: baseHookReturn.currentTrack.length,
       });
       render(<AudioPlayer playlist={mockPlaylist} />);
       expect(screen.getByRole('button', { name: /pause/i })).toHaveAttribute('aria-label', 'pause');
@@ -159,6 +202,7 @@ describe('AudioPlayer', () => {
       totalTracks: 1,
       currentTrack: { artist: '', title: '', length: 0 },
       playhead: 0,
+      duration: 245,
     };
     vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue(baseHookReturn);
     render(<AudioPlayer playlist={mockPlaylist} />);
@@ -185,6 +229,7 @@ describe('AudioPlayer', () => {
       totalTracks: 1,
       currentTrack: { artist: '', title: '', length: 0 },
       playhead: 0,
+      duration: 245,
     };
     vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue(baseHookReturn);
     render(<AudioPlayer playlist={mockPlaylist} />);
@@ -197,23 +242,20 @@ describe('AudioPlayer', () => {
     const playVideo = vi.fn();
     const pauseVideo = vi.fn();
     const seekTo = vi.fn();
-    const baseHookReturn = {
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
       playerRef: {
         current: { playVideo, pauseVideo, seekTo, nextVideo: vi.fn(), previousVideo: vi.fn() },
       },
       playerReady: true,
       playerDivId: { current: 'yt-player-mock' },
+      playerState: 'paused',
       currentTrackIndex: 0,
       totalTracks: 1,
       currentTrack: { artist: '', title: '', length: 0 },
       playhead: 0,
-    };
-    const { rerender } = render(<AudioPlayer playlist={mockPlaylist} />);
-    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
-      ...baseHookReturn,
-      playerState: 'paused',
+      duration: 245,
     });
-    rerender(<AudioPlayer playlist={mockPlaylist} />);
+    const { rerender } = render(<AudioPlayer playlist={mockPlaylist} />);
     const playButton = screen.getByRole('button', { name: /play/i });
     playButton.focus();
     expect(playButton).toHaveFocus();
@@ -223,8 +265,17 @@ describe('AudioPlayer', () => {
     expect(playVideo).toHaveBeenCalledTimes(2);
     // Now test pause button after rerender
     vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
-      ...baseHookReturn,
+      playerRef: {
+        current: { playVideo, pauseVideo, seekTo, nextVideo: vi.fn(), previousVideo: vi.fn() },
+      },
+      playerReady: true,
+      playerDivId: { current: 'yt-player-mock' },
       playerState: 'playing',
+      currentTrackIndex: 0,
+      totalTracks: 1,
+      currentTrack: { artist: '', title: '', length: 0 },
+      playhead: 0,
+      duration: 245,
     });
     rerender(<AudioPlayer playlist={mockPlaylist} />);
     const pauseButton = screen.getByRole('button', { name: /pause/i });
@@ -270,9 +321,10 @@ describe('AudioPlayer', () => {
       currentTrack: {
         artist: 'Test Artist',
         title: 'Test Title',
-        length: 245,
+        length: 0, // now always 0
       },
       playhead: 123,
+      duration: 245,
     };
     vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue(baseHookReturn);
     render(<AudioPlayer playlist={mockPlaylist} />);
@@ -299,8 +351,9 @@ describe('AudioPlayer', () => {
       playerState: 'playing',
       currentTrackIndex: 0,
       totalTracks: 1,
-      currentTrack: { artist: 'Test Artist', title: 'Test Title', length: 245 },
+      currentTrack: { artist: 'Test Artist', title: 'Test Title', length: 0 },
       playhead: 10,
+      duration: 245,
     };
     vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue(baseHookReturn);
     const { rerender } = render(<AudioPlayer playlist={mockPlaylist} />);
@@ -311,10 +364,50 @@ describe('AudioPlayer', () => {
     vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
       ...baseHookReturn,
       playhead: 42,
+      duration: 245,
     });
     rerender(<AudioPlayer playlist={mockPlaylist} />);
     expect(screen.getByTestId('track-playhead').textContent).toBe('0:42');
     const slider2 = screen.getByRole('slider', { name: /seek/i }) as HTMLInputElement;
     expect(slider2.value).toBe('42');
+  });
+});
+
+describe('Seeker end behavior', () => {
+  it('the far right of the seeker should represent the end of the track (track duration)', () => {
+    const baseHookReturn: ReturnType<typeof useYouTubePlayerModule.useYouTubePlayer> = {
+      playerRef: {
+        current: {
+          playVideo: vi.fn(),
+          pauseVideo: vi.fn(),
+          seekTo: vi.fn(),
+          nextVideo: vi.fn(),
+          previousVideo: vi.fn(),
+        },
+      },
+      playerReady: true,
+      playerDivId: { current: 'yt-player-mock' },
+      playerState: 'playing',
+      currentTrackIndex: 0,
+      totalTracks: 1,
+      currentTrack: { artist: 'Test Artist', title: 'Test Title', length: 210 }, // 3:30
+      playhead: 0,
+      duration: 210,
+    };
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue(baseHookReturn);
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    const slider = screen.getByRole('slider', { name: /seek/i }) as HTMLInputElement;
+    expect(slider.max).toBe('210');
+    expect(slider.min).toBe('0');
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+      ...baseHookReturn,
+      playhead: 210,
+      duration: 210,
+    });
+    render(<AudioPlayer playlist={mockPlaylist} />);
+    // Use getAllByRole to get the last slider (from the latest render)
+    const sliders = screen.getAllByRole('slider', { name: /seek/i }) as HTMLInputElement[];
+    const sliderEnd = sliders[sliders.length - 1];
+    expect(Number(sliderEnd.value)).toBe(210);
   });
 });

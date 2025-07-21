@@ -9,6 +9,7 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import { useYouTubePlayer } from '../hooks/useYouTubePlayer';
 import Typography from '@mui/material/Typography';
+import { Grid } from '@mui/material';
 
 interface AudioPlayerProps {
   playlist: Playlist | null;
@@ -67,6 +68,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
     totalTracks,
     currentTrack,
     playhead,
+    duration,
   } = useYouTubePlayer(playlist);
 
   if (!playlist) return null;
@@ -83,12 +85,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
           </Typography>
           <Typography variant="subtitle2" data-testid="track-artist">
             {currentTrack.artist}
-          </Typography>
-          <Typography variant="caption" data-testid="track-length">
-            {formatTime(currentTrack.length)}
-          </Typography>
-          <Typography variant="caption" data-testid="track-playhead">
-            {formatTime(playhead)}
           </Typography>
           <PlayerControlButton
             ariaLabel="prev"
@@ -114,22 +110,40 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
             icon={<SkipNextIcon />}
             action={() => playerRef.current?.nextVideo && playerRef.current.nextVideo()}
           />
-          <Slider
-            aria-label="seek"
-            value={playhead}
-            onChange={(_, value) => {
-              if (typeof value === 'number')
-                playerRef.current?.seekTo && playerRef.current.seekTo(value, true);
-            }}
-            onKeyDown={(e) => {
-              if (!playerRef.current) return;
-              if (e.key === 'ArrowRight') {
-                handleSeekArrowKey(playerRef.current, 1);
-              } else if (e.key === 'ArrowLeft') {
-                handleSeekArrowKey(playerRef.current, -1);
-              }
-            }}
-          />
+          {duration > 0 && (
+            <Grid container justifyContent={'space-between'}>
+              <Grid size={12}>
+                <Slider
+                  aria-label="seek"
+                  value={playhead}
+                  min={0}
+                  max={duration}
+                  onChange={(_, value) => {
+                    if (typeof value === 'number')
+                      playerRef.current?.seekTo && playerRef.current.seekTo(value, true);
+                  }}
+                  onKeyDown={(e) => {
+                    if (!playerRef.current) return;
+                    if (e.key === 'ArrowRight') {
+                      handleSeekArrowKey(playerRef.current, 1);
+                    } else if (e.key === 'ArrowLeft') {
+                      handleSeekArrowKey(playerRef.current, -1);
+                    }
+                  }}
+                />
+              </Grid>
+              <Grid>
+                <Typography variant="caption" data-testid="track-playhead">
+                  {formatTime(playhead)}
+                </Typography>
+              </Grid>
+              <Grid>
+                <Typography variant="caption" data-testid="track-length">
+                  {formatTime(duration)}
+                </Typography>
+              </Grid>
+            </Grid>
+          )}
         </>
       )}
     </div>

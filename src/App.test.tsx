@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import App from './App';
 import { Playlist } from './libs/types';
+import * as useYouTubePlayerModule from './hooks/useYouTubePlayer';
 
 const mockPlaylists: Playlist[] = [
   {
@@ -36,6 +37,25 @@ describe('App', () => {
   });
 
   it('renders AudioPlayer when a playlist is selected', async () => {
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+      playerRef: {
+        current: {
+          playVideo: vi.fn(),
+          pauseVideo: vi.fn(),
+          seekTo: vi.fn(),
+          nextVideo: vi.fn(),
+          previousVideo: vi.fn(),
+        },
+      },
+      playerReady: true,
+      playerDivId: { current: 'yt-player-mock' },
+      playerState: 'paused',
+      currentTrackIndex: 0,
+      totalTracks: 1,
+      currentTrack: { artist: '', title: '', length: 0 },
+      playhead: 0,
+      duration: 245,
+    });
     // Mock window.YT.Player to capture onReady
     let onReadyCallback: (() => void) | undefined;
     window.YT = {
