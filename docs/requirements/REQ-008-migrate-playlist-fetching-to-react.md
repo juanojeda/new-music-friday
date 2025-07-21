@@ -33,6 +33,23 @@ As a developer, I want the weekly playlist fetching logic (originally implemente
     ```
   - Dependencies: FR-008-001
 
+- FR-008-003: Automate Weekly Execution and Deployment
+  - Description: The playlist fetching script must be executed automatically on a weekly schedule using a managed CI/CD solution (e.g., GitHub Actions), with results committed to the repository and triggering a site rebuild/deploy.
+  - Pre-conditions: Playlist fetching script is implemented and runnable via npm script.
+  - Post-conditions: The playlist data is updated weekly without manual intervention, and the site is rebuilt with the latest data.
+  - Acceptance Criteria:
+    ```Gherkin
+    Scenario: Automated weekly playlist update
+      Given the playlist fetching script is implemented
+      And credentials are securely stored
+      When the scheduled workflow runs (once per week)
+      Then the script fetches and updates the playlist data
+      And commits the changes to the repository
+      And triggers a site rebuild/deploy
+    ```
+  - Dependencies: FR-008-001, FR-008-002
+  - References: ADR-005-weekly-playlist-fetching-scheduling.md
+
 ## Non-Functional Requirements
 
 - NFR-008-001: API Usage

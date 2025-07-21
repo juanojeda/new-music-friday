@@ -13,8 +13,14 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 - [ ] **REQ-008**: Migrate playlist fetching logic to React/Vite infrastructure
   - Priority: High
   - Dependencies: MIG-001, INF-002
-  - Status: Not Started
+  - Status: In Progress
   - Requirements File: [REQ-008-migrate-playlist-fetching-to-react.md](docs/requirements/REQ-008-migrate-playlist-fetching-to-react.md)
+  - [x] Implement playlist fetching script in scripts/fetch-playlists.ts
+  - [x] Store playlists as JSON in public/playlists.nmf.json
+  - [ ] Add and test npm script to run fetch-playlists
+  - [ ] Create GitHub Actions workflow for weekly schedule
+  - [ ] Add YouTube API credentials as GitHub Secrets
+  - [ ] Automate commit and deploy of updated playlist data
 - [ ] **MIG-003**: Write tests for all new React components (React Testing Library, Jest)
   - Priority: High
   - Dependencies: MIG-002
@@ -25,6 +31,11 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Dependencies: MIG-002
   - Status: Not Started
   - Requirements File: (to be created)
+- [ ] **REQ-009**: Dynamic Material UI theme from playlist artwork
+  - Priority: High
+  - Dependencies: REQ-008
+  - Status: Not Started
+  - Requirements File: [REQ-009-dynamic-theme-from-artwork.md](docs/requirements/REQ-009-dynamic-theme-from-artwork.md)
 
 ## Completed Items
 
