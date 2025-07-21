@@ -7,6 +7,7 @@ import PauseIcon from '@mui/icons-material/Pause';
 import Slider from '@mui/material/Slider';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import { useYouTubePlayer } from '../hooks/useYouTubePlayer';
 
 interface AudioPlayerProps {
   playlist: Playlist | null;
@@ -63,66 +64,7 @@ function PlayerControlButton({ ariaLabel, icon, action }: PlayerControlButtonPro
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
-  const playerDivId = useRef(`yt-player-${Math.random().toString(36).slice(2)}`);
-  const playerRef = useRef<YTPlayer | null>(null);
-  const latestPlaylistRef = useRef<Playlist | null>(playlist);
-  const [playerReady, setPlayerReady] = useState(false);
-
-  useEffect(
-    function keepLatestPlaylistInRef() {
-      latestPlaylistRef.current = playlist;
-    },
-    [playlist],
-  );
-
-  useEffect(
-    function ensureYouTubeScriptLoaded() {
-      if (playlist && typeof window !== 'undefined' && !hasYT(window)) {
-        ensureYouTubeIframeAPILoaded();
-      }
-    },
-    [playlist],
-  );
-
-  useEffect(
-    function createPlayerWhenAPIReady() {
-      if (!playlist || typeof window === 'undefined') return;
-      function createPlayerForCurrentPlaylist() {
-        if (playerRef.current) return;
-        const current = latestPlaylistRef.current;
-        if (!current) return;
-        playerRef.current = new (window as Window & typeof globalThis).YT!.Player(
-          playerDivId.current,
-          {
-            height: '0',
-            width: '0',
-            playerVars: { listType: 'playlist', list: current.id },
-            events: {
-              onReady: () => setPlayerReady(true),
-            },
-          } as YTPlayerOptions,
-        );
-      }
-      // Set up the callback only once
-      if (!(window as Window & typeof globalThis).onYouTubeIframeAPIReady) {
-        (window as Window & typeof globalThis).onYouTubeIframeAPIReady = () => {
-          createPlayerForCurrentPlaylist();
-        };
-      }
-      // If API is already loaded, create player immediately
-      if (hasYT(window)) {
-        createPlayerForCurrentPlaylist();
-      }
-      return () => {
-        if (playerRef.current) {
-          playerRef.current.destroy?.();
-          playerRef.current = null;
-        }
-        setPlayerReady(false);
-      };
-    },
-    [playlist],
-  );
+  const { playerRef, playerReady, playerDivId } = useYouTubePlayer(playlist);
 
   if (!playlist) return null;
   return (
