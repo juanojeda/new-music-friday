@@ -52,24 +52,19 @@ const filterByPrefix = (prefix: string) => (item: YouTubePlaylistItem) =>
 
 function extractDominantColorFromSvg(svg: string): string {
   const $ = load(svg, { xmlMode: true });
-  // Try to find the largest <rect> or <path> and get its fill
   let dominant = '#000000';
-  let maxArea = 0;
-  $('rect, path').each((_, el) => {
-    const fill = $(el).attr('fill');
-    if (fill && fill !== 'none') {
-      // Estimate area for <rect>
-      if (el.type === 'tag' && el.tagName === 'rect') {
-        const w = parseFloat($(el).attr('width') || '0');
-        const h = parseFloat($(el).attr('height') || '0');
-        const area = w * h;
-        if (area > maxArea) {
-          maxArea = area;
-          dominant = fill;
-        }
-      } else if (el.type === 'tag' && el.tagName === 'path') {
-        // For <path>, just take the first with a fill
-        if (maxArea === 0) {
+  let maxPoints = 0;
+  $('path').each((_, el) => {
+    if (el.type === 'tag') {
+      const fill = $(el).attr('fill');
+      const d = $(el).attr('d');
+      if (fill && fill !== 'none' && d) {
+        // Count vector points: number of coordinate pairs (numbers or commands followed by numbers)
+        // Split on command letters and whitespace, count number pairs
+        const points = d.match(/-?\d*\.?\d+/g);
+        const numPoints = points ? points.length / 2 : 0;
+        if (numPoints > maxPoints) {
+          maxPoints = numPoints;
           dominant = fill;
         }
       }
