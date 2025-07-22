@@ -5,6 +5,10 @@ on:
     - cron: '0 6 * * 5' # Every Friday at 6:00 UTC
   workflow_dispatch:
 
+
+permissions:
+  contents: write
+
 jobs:
   fetch-and-commit:
     runs-on: ubuntu-latest
