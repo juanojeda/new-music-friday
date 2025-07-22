@@ -4,9 +4,10 @@ import PlaylistList from './components/PlaylistList';
 import AudioPlayer from './components/AudioPlayer';
 import React, { useEffect, useState } from 'react';
 import { Playlist } from './libs/types';
+import ThemeSwitcher from './components/ThemeSwitcher';
+import { CssBaseline } from '@mui/material';
 
 function App() {
-  const theme = createTheme();
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,14 +35,15 @@ function App() {
   if (error) return <div>Failed to load playlists.</div>;
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeSwitcher>
+      <CssBaseline />
       <AudioPlayer playlist={selectedPlaylist} />
       <PlaylistList
         playlists={playlists}
         selectedId={selectedId}
         onSelect={(playlist) => setSelectedId(playlist.id)}
       />
-    </ThemeProvider>
+    </ThemeSwitcher>
   );
 }
 
