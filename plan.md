@@ -16,6 +16,20 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Status: Not Started
   - Requirements File: [REQ-009-dynamic-theme-from-artwork.md](docs/requirements/REQ-009-dynamic-theme-from-artwork.md)
 
+## Deployment & Hosting
+
+- [ ] **REQ-010**: Deploy static site to GitHub Pages
+  - Priority: Critical
+  - Dependencies: REQ-006, ADR-006
+  - Status: Not Started
+  - Requirements File: [REQ-010-github-pages-deployment.md](docs/requirements/REQ-010-github-pages-deployment.md)
+  - Atomic Tasks:
+    - [ ] Set up GitHub Actions workflow for build and deploy to `gh-pages` branch
+    - [ ] Configure repository GitHub Pages settings to serve from `gh-pages` branch
+    - [ ] Set up custom domain and enable SSL in GitHub Pages settings (if required)
+    - [ ] Document deployment workflow and maintenance steps in project README
+    - [ ] Validate deployment by pushing a test build and confirming site availability at the GitHub Pages URL and custom domain
+
 ## Completed Items
 
 - REQ-008: Migrated playlist fetching logic to React/Vite infrastructure
