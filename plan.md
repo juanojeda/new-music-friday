@@ -19,8 +19,8 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - [x] Store playlists as JSON in public/playlists.nmf.json
   - [x] Add and test npm script to run fetch-playlists
   - [x] Create GitHub Actions workflow for weekly schedule
-  - [ ] Add YouTube API credentials as GitHub Secrets
-  - [ ] Automate commit and deploy of updated playlist data
+  - [x] Add YouTube API credentials as GitHub Secrets
+  - [x] Automate commit and deploy of updated playlist data
 - [ ] **MIG-003**: Write tests for all new React components (React Testing Library, Jest)
   - Priority: High
   - Dependencies: MIG-002
