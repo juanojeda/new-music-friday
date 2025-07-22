@@ -13,16 +13,19 @@ vi.mock('fs', async () => {
 // Import the stubbed fetchPlaylists function
 import { fetchPlaylists } from './fetch-playlists';
 
-const TEST_JSON_PATH = path.resolve(__dirname, '../public/playlists.nmf.json');
+const _TEST_JSON_PATH = path.resolve(__dirname, '../public/playlists.nmf.json');
 
 describe('fetch-playlists script', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
+  beforeEach(async () => {
+    const _filePath = _TEST_JSON_PATH;
+    if (fs.existsSync(_filePath)) {
+      fs.unlinkSync(_filePath);
+    }
   });
 
   it('writes an array of playlists with id, name, publishedAt, and thumbnail to public/playlists.nmf.json', async () => {
     // Arrange: mock YouTube API response and fs
-    const mockPlaylists = [
+    const _mockPlaylists = [
       {
         id: 'PL123',
         name: 'New Music Friday 2025 July 18',
@@ -66,11 +69,13 @@ describe('fetch-playlists script', () => {
     await fetchPlaylists({ apiKey: '', channelId: '', namePrefix: '' });
     // Assert: check that writeFileSync was called
     expect(fs.writeFileSync).toHaveBeenCalled();
-    const [filePath, data] = (fs.writeFileSync as any).mock.calls[0];
+    const [_filePath, data] = (
+      fs.writeFileSync as unknown as { mock: { calls: [unknown, string][] } }
+    ).mock.calls[0];
     const playlists = JSON.parse(data);
     expect(playlists).toEqual([
-      expect.objectContaining(mockPlaylists[0]),
-      expect.objectContaining(mockPlaylists[1]),
+      expect.objectContaining(_mockPlaylists[0]),
+      expect.objectContaining(_mockPlaylists[1]),
     ]);
   });
 
@@ -116,7 +121,9 @@ describe('fetch-playlists script', () => {
       namePrefix: 'New Music Friday',
     });
     // Assert: only playlists with the prefix are written
-    const [filePath, data] = (fs.writeFileSync as any).mock.calls[0];
+    const [_filePath, data] = (
+      fs.writeFileSync as unknown as { mock: { calls: [unknown, string][] } }
+    ).mock.calls[0];
     const playlists = JSON.parse(data);
     expect(playlists).toEqual([
       expect.objectContaining({
@@ -135,7 +142,7 @@ describe('fetch-playlists script', () => {
   });
 
   it('includes a unique SVG artwork for each playlist in playlists.nmf.json', async () => {
-    const mockPlaylists = [
+    const _mockPlaylists = [
       {
         id: 'PL123',
         name: 'New Music Friday 2025 July 18',
@@ -177,14 +184,54 @@ describe('fetch-playlists script', () => {
     await fetchPlaylists({ apiKey: '', channelId: '', namePrefix: '' });
     // Get the written data
     expect(fs.writeFileSync).toHaveBeenCalled();
-    const [filePath, data] = (fs.writeFileSync as any).mock.calls[0];
+    const [_filePath, data] = (
+      fs.writeFileSync as unknown as { mock: { calls: [unknown, string][] } }
+    ).mock.calls[0];
     const playlists = JSON.parse(data);
     for (const playlist of playlists) {
       expect(typeof playlist.artworkSvg).toBe('string');
       expect(playlist.artworkSvg.length).toBeGreaterThan(0);
     }
     // Ensure SVGs are unique per playlist ID
-    const svgSet = new Set(playlists.map((p: any) => p.artworkSvg));
+    const svgSet = new Set(playlists.map((p: unknown) => (p as { artworkSvg: string }).artworkSvg));
     expect(svgSet.size).toBe(playlists.length);
   });
-}); 
+
+  it('includes a dominantColor for each playlist in playlists.nmf.json', async () => {
+    const mockApiResponse = {
+      items: [
+        {
+          id: 'PL123',
+          snippet: {
+            title: 'New Music Friday 2025 July 18',
+            publishedAt: '2025-07-15T04:03:29.241254Z',
+            thumbnails: { default: { url: 'https://i.ytimg.com/vi/IKy-thh3fyE/default.jpg' } },
+          },
+        },
+        {
+          id: 'PL456',
+          snippet: {
+            title: 'New Music Friday - 2025 Jul 4',
+            publishedAt: '2025-07-04T01:36:51.142934Z',
+            thumbnails: { default: { url: 'https://i.ytimg.com/vi/NYQc2Q2omAQ/default.jpg' } },
+          },
+        },
+      ],
+      nextPageToken: undefined,
+    };
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => mockApiResponse,
+    });
+    await fetchPlaylists({ apiKey: '', channelId: '', namePrefix: '' });
+    expect(fs.writeFileSync).toHaveBeenCalled();
+    const [_filePath, data] = (
+      fs.writeFileSync as unknown as { mock: { calls: [unknown, string][] } }
+    ).mock.calls[0];
+    const playlists = JSON.parse(data);
+    for (const playlist of playlists) {
+      expect(typeof playlist.dominantColor).toBe('string');
+      expect(playlist.dominantColor.length).toBeGreaterThan(0);
+    }
+  });
+});

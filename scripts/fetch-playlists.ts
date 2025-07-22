@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { toSvg } from 'jdenticon';
+import { load } from 'cheerio';
 
 export interface FetchPlaylistsOptions {
   apiKey: string;
@@ -18,6 +19,7 @@ export interface Playlist {
 
 export interface PlaylistWithArtwork extends Playlist {
   artworkSvg: string;
+  dominantColor: string;
 }
 
 interface YouTubePlaylistItem {
@@ -48,10 +50,43 @@ const mapToPlaylist = (item: YouTubePlaylistItem): Playlist => ({
 const filterByPrefix = (prefix: string) => (item: YouTubePlaylistItem) =>
   item.snippet.title.startsWith(prefix);
 
-const addArtworkSvgToPlaylist = (playlist: Playlist): PlaylistWithArtwork => ({
-  ...playlist,
-  artworkSvg: toSvg(playlist.id, 64),
-});
+function extractDominantColorFromSvg(svg: string): string {
+  const $ = load(svg, { xmlMode: true });
+  // Try to find the largest <rect> or <path> and get its fill
+  let dominant = '#000000';
+  let maxArea = 0;
+  $('rect, path').each((_, el) => {
+    const fill = $(el).attr('fill');
+    if (fill && fill !== 'none') {
+      // Estimate area for <rect>
+      if (el.type === 'tag' && el.tagName === 'rect') {
+        const w = parseFloat($(el).attr('width') || '0');
+        const h = parseFloat($(el).attr('height') || '0');
+        const area = w * h;
+        if (area > maxArea) {
+          maxArea = area;
+          dominant = fill;
+        }
+      } else if (el.type === 'tag' && el.tagName === 'path') {
+        // For <path>, just take the first with a fill
+        if (maxArea === 0) {
+          dominant = fill;
+        }
+      }
+    }
+  });
+  return dominant;
+}
+
+const addArtworkSvgToPlaylist = (playlist: Playlist): PlaylistWithArtwork => {
+  const artworkSvg = toSvg(playlist.id, 64);
+  const dominantColor = extractDominantColorFromSvg(artworkSvg);
+  return {
+    ...playlist,
+    artworkSvg,
+    dominantColor,
+  };
+};
 
 const getPublicJsonPath = () => {
   const __filename = fileURLToPath(import.meta.url);
@@ -64,7 +99,8 @@ const writePlaylistsJson = (playlists: Playlist[]) => {
   fs.writeFileSync(outPath, JSON.stringify(playlists, null, 2));
 };
 
-const redactKey = (key: string) => key.length > 8 ? key.slice(0, 4) + '***' + key.slice(-2) : '***';
+const redactKey = (key: string) =>
+  key.length > 8 ? key.slice(0, 4) + '***' + key.slice(-2) : '***';
 
 export async function fetchPlaylists(opts: FetchPlaylistsOptions): Promise<void> {
   const url = buildYouTubeApiUrl(opts);
@@ -76,11 +112,12 @@ export async function fetchPlaylists(opts: FetchPlaylistsOptions): Promise<void>
     throw new Error(`YouTube API error: ${res.status} ${res.statusText}`);
   }
   const data = await res.json();
-  const filtered = (data.items || [])
-    .filter(filterByPrefix(opts.namePrefix));
+  const filtered = (data.items || []).filter(filterByPrefix(opts.namePrefix));
   const mapped: Playlist[] = filtered.map(mapToPlaylist);
   const playlists: PlaylistWithArtwork[] = mapped.map(addArtworkSvgToPlaylist);
-  console.log(`[fetch-playlists] Writing ${playlists.length} playlists to public/playlists.nmf.json`);
+  console.log(
+    `[fetch-playlists] Writing ${playlists.length} playlists to public/playlists.nmf.json`,
+  );
   writePlaylistsJson(playlists);
 }
 
@@ -90,7 +127,7 @@ if (!process.env.CI) {
     const dotenv = await import('dotenv');
     dotenv.config();
     console.log('[fetch-playlists] Loaded .env file for local development');
-  } catch (err) {
+  } catch (_err) {
     console.warn('[fetch-playlists] dotenv not installed or failed to load');
   }
 }
@@ -101,7 +138,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const apiKey = process.env.YOUTUBE_API_KEY;
   const channelId = process.env.YOUTUBE_CHANNEL_ID;
   if (!apiKey || !channelId) {
-    console.error('[fetch-playlists] Missing YOUTUBE_API_KEY or YOUTUBE_CHANNEL_ID in environment.');
+    console.error(
+      '[fetch-playlists] Missing YOUTUBE_API_KEY or YOUTUBE_CHANNEL_ID in environment.',
+    );
     process.exit(1);
   }
   console.log('[fetch-playlists] Using channelId:', channelId);
@@ -118,4 +157,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       console.error('[fetch-playlists] Error during playlist fetch:', err);
       process.exit(1);
     });
-} 
+}
