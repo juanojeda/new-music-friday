@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { toSvg } from 'jdenticon';
 
 export interface FetchPlaylistsOptions {
   apiKey: string;
@@ -33,7 +34,7 @@ const buildYouTubeApiUrl = ({ apiKey, channelId }: FetchPlaylistsOptions): strin
   return url.toString();
 };
 
-const mapToPlaylist = (item: YouTubePlaylistItem): Playlist => ({
+const mapToPlaylist = (item: YouTubePlaylistItem): Playlist & { artworkSvg?: string } => ({
   id: item.id,
   name: item.snippet.title,
   publishedAt: item.snippet.publishedAt,
@@ -68,7 +69,11 @@ export async function fetchPlaylists(opts: FetchPlaylistsOptions): Promise<void>
   const data = await res.json();
   const playlists = (data.items || [])
     .filter(filterByPrefix(opts.namePrefix))
-    .map(mapToPlaylist);
+    .map(mapToPlaylist)
+    .map((playlist) => ({
+      ...playlist,
+      artworkSvg: toSvg(playlist.id, 64),
+    }));
   console.log(`[fetch-playlists] Writing ${playlists.length} playlists to public/playlists.nmf.json`);
   writePlaylistsJson(playlists);
 }

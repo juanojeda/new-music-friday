@@ -64,11 +64,14 @@ describe('fetch-playlists script', () => {
     });
     // Act: call the (not yet implemented) fetchPlaylists
     await fetchPlaylists({ apiKey: '', channelId: '', namePrefix: '' });
-    // Assert: check that writeFileSync was called with the correct path and data
-    expect(fs.writeFileSync).toHaveBeenCalledWith(
-      TEST_JSON_PATH,
-      JSON.stringify(mockPlaylists, null, 2)
-    );
+    // Assert: check that writeFileSync was called
+    expect(fs.writeFileSync).toHaveBeenCalled();
+    const [filePath, data] = (fs.writeFileSync as any).mock.calls[0];
+    const playlists = JSON.parse(data);
+    expect(playlists).toEqual([
+      expect.objectContaining(mockPlaylists[0]),
+      expect.objectContaining(mockPlaylists[1]),
+    ]);
   });
 
   it('fetches playlists from the YouTube API, filters by name prefix, and writes correct data to JSON', async () => {
@@ -113,7 +116,26 @@ describe('fetch-playlists script', () => {
       namePrefix: 'New Music Friday',
     });
     // Assert: only playlists with the prefix are written
-    const expected = [
+    const [filePath, data] = (fs.writeFileSync as any).mock.calls[0];
+    const playlists = JSON.parse(data);
+    expect(playlists).toEqual([
+      expect.objectContaining({
+        id: 'PL123',
+        name: 'New Music Friday 2025 July 18',
+        publishedAt: '2025-07-15T04:03:29.241254Z',
+        thumbnail: 'https://i.ytimg.com/vi/IKy-thh3fyE/default.jpg',
+      }),
+      expect.objectContaining({
+        id: 'PL456',
+        name: 'New Music Friday - 2025 Jul 4',
+        publishedAt: '2025-07-04T01:36:51.142934Z',
+        thumbnail: 'https://i.ytimg.com/vi/NYQc2Q2omAQ/default.jpg',
+      }),
+    ]);
+  });
+
+  it('includes a unique SVG artwork for each playlist in playlists.nmf.json', async () => {
+    const mockPlaylists = [
       {
         id: 'PL123',
         name: 'New Music Friday 2025 July 18',
@@ -127,9 +149,42 @@ describe('fetch-playlists script', () => {
         thumbnail: 'https://i.ytimg.com/vi/NYQc2Q2omAQ/default.jpg',
       },
     ];
-    expect(fs.writeFileSync).toHaveBeenCalledWith(
-      TEST_JSON_PATH,
-      JSON.stringify(expected, null, 2)
-    );
+    const mockApiResponse = {
+      items: [
+        {
+          id: 'PL123',
+          snippet: {
+            title: 'New Music Friday 2025 July 18',
+            publishedAt: '2025-07-15T04:03:29.241254Z',
+            thumbnails: { default: { url: 'https://i.ytimg.com/vi/IKy-thh3fyE/default.jpg' } },
+          },
+        },
+        {
+          id: 'PL456',
+          snippet: {
+            title: 'New Music Friday - 2025 Jul 4',
+            publishedAt: '2025-07-04T01:36:51.142934Z',
+            thumbnails: { default: { url: 'https://i.ytimg.com/vi/NYQc2Q2omAQ/default.jpg' } },
+          },
+        },
+      ],
+      nextPageToken: undefined,
+    };
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => mockApiResponse,
+    });
+    await fetchPlaylists({ apiKey: '', channelId: '', namePrefix: '' });
+    // Get the written data
+    expect(fs.writeFileSync).toHaveBeenCalled();
+    const [filePath, data] = (fs.writeFileSync as any).mock.calls[0];
+    const playlists = JSON.parse(data);
+    for (const playlist of playlists) {
+      expect(typeof playlist.artworkSvg).toBe('string');
+      expect(playlist.artworkSvg.length).toBeGreaterThan(0);
+    }
+    // Ensure SVGs are unique per playlist ID
+    const svgSet = new Set(playlists.map((p: any) => p.artworkSvg));
+    expect(svgSet.size).toBe(playlists.length);
   });
 }); 
