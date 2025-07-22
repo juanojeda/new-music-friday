@@ -20,6 +20,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Debug env
+        run: |
+          echo "YOUTUBE_API_KEY is set: ${YOUTUBE_API_KEY:+yes}"
+          echo "YOUTUBE_CHANNEL_ID is set: ${YOUTUBE_CHANNEL_ID:+yes}"
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          YOUTUBE_CHANNEL_ID: ${{ secrets.YOUTUBE_CHANNEL_ID }}
+
       - name: Fetch latest playlists
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
@@ -38,4 +46,4 @@ jobs:
 
       - name: Trigger site deploy
         if: success()
-        run: echo "Site deploy should be triggered by push to main branch." 
+        run: echo "Site deploy should be triggered by push to main branch."
