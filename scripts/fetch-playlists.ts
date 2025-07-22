@@ -16,6 +16,10 @@ export interface Playlist {
   thumbnail: string;
 }
 
+export interface PlaylistWithArtwork extends Playlist {
+  artworkSvg: string;
+}
+
 interface YouTubePlaylistItem {
   id: string;
   snippet: {
@@ -34,7 +38,7 @@ const buildYouTubeApiUrl = ({ apiKey, channelId }: FetchPlaylistsOptions): strin
   return url.toString();
 };
 
-const mapToPlaylist = (item: YouTubePlaylistItem): Playlist & { artworkSvg?: string } => ({
+const mapToPlaylist = (item: YouTubePlaylistItem): Playlist => ({
   id: item.id,
   name: item.snippet.title,
   publishedAt: item.snippet.publishedAt,
@@ -43,6 +47,11 @@ const mapToPlaylist = (item: YouTubePlaylistItem): Playlist & { artworkSvg?: str
 
 const filterByPrefix = (prefix: string) => (item: YouTubePlaylistItem) =>
   item.snippet.title.startsWith(prefix);
+
+const addArtworkSvgToPlaylist = (playlist: Playlist): PlaylistWithArtwork => ({
+  ...playlist,
+  artworkSvg: toSvg(playlist.id, 64),
+});
 
 const getPublicJsonPath = () => {
   const __filename = fileURLToPath(import.meta.url);
@@ -67,13 +76,10 @@ export async function fetchPlaylists(opts: FetchPlaylistsOptions): Promise<void>
     throw new Error(`YouTube API error: ${res.status} ${res.statusText}`);
   }
   const data = await res.json();
-  const playlists = (data.items || [])
-    .filter(filterByPrefix(opts.namePrefix))
-    .map(mapToPlaylist)
-    .map((playlist) => ({
-      ...playlist,
-      artworkSvg: toSvg(playlist.id, 64),
-    }));
+  const filtered = (data.items || [])
+    .filter(filterByPrefix(opts.namePrefix));
+  const mapped: Playlist[] = filtered.map(mapToPlaylist);
+  const playlists: PlaylistWithArtwork[] = mapped.map(addArtworkSvgToPlaylist);
   console.log(`[fetch-playlists] Writing ${playlists.length} playlists to public/playlists.nmf.json`);
   writePlaylistsJson(playlists);
 }

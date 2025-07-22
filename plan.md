@@ -15,6 +15,12 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
   - Dependencies: REQ-008
   - Status: Not Started
   - Requirements File: [REQ-009-dynamic-theme-from-artwork.md](docs/requirements/REQ-009-dynamic-theme-from-artwork.md)
+  - Atomic Tasks:
+    - [ ] During fetch-playlists, generate unique SVG artwork for each playlist using jdenticon and include it in playlists.nmf.json
+    - [ ] During fetch-playlists, extract dominant color from each SVG artwork and include it in playlists.nmf.json
+    - [ ] Generate Material UI theme palette from dominant color for each playlist
+    - [ ] Dynamically update app theme on playlist selection
+    - [ ] Smoothly transition between themes
 
 ## Completed Items
 

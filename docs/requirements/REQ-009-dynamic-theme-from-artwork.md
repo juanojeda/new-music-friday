@@ -7,28 +7,29 @@ As a user, I want the app's theme to dynamically reflect the unique artwork of e
 ## Functional Requirements
 
 - FR-009-001: Generate unique SVG artwork for each playlist using jdenticon
-  - Description: When playlists are fetched, generate a unique SVG artwork for each playlist using its ID as the seed with the jdenticon library.
+  - Description: When playlists are fetched (as part of the fetch-playlists task), generate a unique SVG artwork for each playlist using its ID as the seed with the jdenticon library. The generated SVG must be included in the playlists.nmf.json payload.
   - Pre-conditions: Playlist data is available with unique IDs.
-  - Post-conditions: Each playlist has a corresponding SVG artwork.
+  - Post-conditions: Each playlist in playlists.nmf.json has a corresponding SVG artwork.
   - Acceptance Criteria:
     ```Gherkin
-    Scenario: Generate SVG artwork for playlist
+    Scenario: Generate SVG artwork for playlist during fetch-playlists
       Given a playlist with a unique ID
-      When playlists are fetched
+      When the fetch-playlists task runs
       Then an SVG artwork is generated for each playlist using jdenticon
+      And the SVG is included in the playlists.nmf.json payload
     ```
   - Dependencies: Playlist fetching logic
 
 - FR-009-002: Extract dominant color from SVG artwork
-  - Description: For each generated SVG, extract the dominant color using a color analysis library (e.g., color-thief, node-vibrant) by rendering the SVG to a canvas and analyzing pixel data.
+  - Description: For each generated SVG, extract the dominant color using a color analysis library (e.g., color-thief, node-vibrant) by rendering the SVG to a canvas and analyzing pixel data. This must occur during the fetch-playlists task, and the dominant color must be included in the playlists.nmf.json payload.
   - Pre-conditions: SVG artwork is generated for each playlist.
-  - Post-conditions: Each playlist has a dominant color value stored in its data.
+  - Post-conditions: Each playlist in playlists.nmf.json has a dominant color value stored in its data.
   - Acceptance Criteria:
     ```Gherkin
-    Scenario: Extract dominant color from SVG
+    Scenario: Extract dominant color from SVG during fetch-playlists
       Given a playlist with generated SVG artwork
-      When the SVG is rendered to a canvas
-      Then the dominant color is extracted and stored with the playlist data
+      When the fetch-playlists task runs
+      Then the dominant color is extracted and stored with the playlist data in playlists.nmf.json
     ```
   - Dependencies: FR-009-001
 
@@ -79,8 +80,8 @@ As a user, I want the app's theme to dynamically reflect the unique artwork of e
 
 ## Technical Specifications & Guidance
 
-- Use jdenticon to generate SVGs for playlist artwork.
-- Render SVGs to a canvas and use a color extraction library (e.g., color-thief, node-vibrant) to determine the dominant color.
+- Use jdenticon to generate SVGs for playlist artwork as part of the fetch-playlists task.
+- Render SVGs to a canvas and use a color extraction library (e.g., color-thief, node-vibrant) to determine the dominant color during the fetch-playlists task.
 - Use a palette generation utility (e.g., material-you-color) to create a Material UI theme palette from the dominant color.
 - Store the palette with each playlist's data for quick access.
 - Update the Material UI theme via ThemeProvider when a playlist is selected.
