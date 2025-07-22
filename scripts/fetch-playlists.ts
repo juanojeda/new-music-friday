@@ -88,14 +88,14 @@ const addArtworkSvgToPlaylist = (playlist: Playlist): PlaylistWithArtwork => {
   };
 };
 
-const getPublicJsonPath = () => {
+const getPlaylistsJsonPath = () => {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   return path.resolve(__dirname, '../public/playlists.nmf.json');
 };
 
-const writePlaylistsJson = (playlists: Playlist[]) => {
-  const outPath = getPublicJsonPath();
+const writePlaylistsJson = (playlists: PlaylistWithArtwork[]) => {
+  const outPath = getPlaylistsJsonPath();
   fs.writeFileSync(outPath, JSON.stringify(playlists, null, 2));
 };
 
