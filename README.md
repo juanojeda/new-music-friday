@@ -1,5 +1,7 @@
 # New Music Friday
 
+Check it out: https://juanojeda.github.io/new-music-friday/
+
 A minimal web app that fetches, displays, and lets you play public "New Music Friday" YouTube Music playlists. No login required. Playlists update weekly.
 
 ## Run Locally
@@ -25,3 +27,12 @@ A minimal web app that fetches, displays, and lets you play public "New Music Fr
    ```
 
 Visit [http://localhost:5173](http://localhost:5173) to use the app.
+
+## Deployment & GitHub Pages
+
+The site is automatically deployed to GitHub Pages using GitHub Actions:
+
+- On every push to the `main` branch, a GitHub Actions workflow builds the site and deploys the contents of the `dist/` directory to the `gh-pages` branch.
+- GitHub Pages is configured to serve from the `gh-pages` branch in repository settings.
+- No manual deployment steps are required for standard updates—just push to `main`.
+- For details on the deployment workflow, see [REQ-010-github-pages-deployment.md](docs/requirements/REQ-010-github-pages-deployment.md).
