@@ -13,7 +13,7 @@ function App() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch('/playlists.nmf.json')
+    fetch(`${import.meta.env.BASE_URL}playlists.nmf.json`)
       .then((res) => {
         if (!res.ok) throw new Error('API error');
         return res.json();
