@@ -61,4 +61,4 @@ As a developer, I want the static site to be automatically deployed to GitHub Pa
 - Configure the repository's GitHub Pages settings to serve from the `gh-pages` branch.
 - Set up a custom domain and enable SSL via GitHub Pages settings as needed.
 - Reference ADR-006 for architectural decisions and rationale.
-- Ensure the workflow is documented for future maintainers. 
+- Ensure the workflow is documented for future maintainers.

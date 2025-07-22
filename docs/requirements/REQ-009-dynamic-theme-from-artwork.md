@@ -21,7 +21,7 @@ As a user, I want the app's theme to dynamically reflect the unique artwork of e
   - Dependencies: Playlist fetching logic
 
 - FR-009-002: Extract dominant color from SVG artwork
-  - Description: For each generated SVG, extract the dominant color using a color analysis library (e.g., color-thief, node-vibrant) by rendering the SVG to a canvas and analyzing pixel data. This must occur during the fetch-playlists task, and the dominant color must be included in the playlists.nmf.json payload.
+  - Description: For each generated SVG, extract the dominant color by analyzing the SVG markup directly. Determine the color of the `<path>` element with the most vector points (i.e., the path with the largest number of coordinate commands). This must occur during the fetch-playlists task, and the dominant color must be included in the playlists.nmf.json payload. **Do not render the SVG to a canvas or use pixel-based color extraction.**
   - Pre-conditions: SVG artwork is generated for each playlist.
   - Post-conditions: Each playlist in playlists.nmf.json has a dominant color value stored in its data.
   - Acceptance Criteria:
@@ -29,7 +29,8 @@ As a user, I want the app's theme to dynamically reflect the unique artwork of e
     Scenario: Extract dominant color from SVG during fetch-playlists
       Given a playlist with generated SVG artwork
       When the fetch-playlists task runs
-      Then the dominant color is extracted and stored with the playlist data in playlists.nmf.json
+      Then the dominant color is determined by the color of the SVG path with the most vector points
+      And the dominant color is stored with the playlist data in playlists.nmf.json
     ```
   - Dependencies: FR-009-001
 
@@ -81,9 +82,9 @@ As a user, I want the app's theme to dynamically reflect the unique artwork of e
 ## Technical Specifications & Guidance
 
 - Use jdenticon to generate SVGs for playlist artwork as part of the fetch-playlists task.
-- Render SVGs to a canvas and use a color extraction library (e.g., color-thief, node-vibrant) to determine the dominant color during the fetch-playlists task.
+- **To extract the dominant color, parse the SVG markup and identify the `<path>` element with the most vector points (i.e., the most coordinate commands in its `d` attribute). Use the color (e.g., `fill` attribute) of this path as the dominant color. Do not render the SVG or use pixel-based color extraction.**
 - Use a palette generation utility (e.g., material-you-color) to create a Material UI theme palette from the dominant color.
 - Store the palette with each playlist's data for quick access.
 - Update the Material UI theme via ThemeProvider when a playlist is selected.
 - Use CSS transitions or framer-motion for smooth theme changes.
-- Ensure all UI components use Material UI and respect the current theme. 
+- Ensure all UI components use Material UI and respect the current theme.

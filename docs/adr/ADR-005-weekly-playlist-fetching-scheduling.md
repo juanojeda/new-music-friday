@@ -1,6 +1,7 @@
 # ADR-005: Weekly Playlist Fetching Scheduling
 
 ## Status
+
 Proposed
 
 ## Context
@@ -10,6 +11,7 @@ The app requires up-to-date playlist data from YouTube Music, fetched and stored
 ## Options Considered
 
 ### 1. GitHub Actions Scheduled Workflow (**Recommended**)
+
 - **How it works:**
   - Use GitHub Actions to run the script on a cron schedule (e.g., every Friday).
   - The workflow installs dependencies, runs the script, commits the updated JSON, and (optionally) triggers a site rebuild/deploy.
@@ -32,6 +34,7 @@ The app requires up-to-date playlist data from YouTube Music, fetched and stored
   - Workflow minutes are limited for private repos (but generous for most use cases).
 
 ### 2. Serverless Function with Scheduled Trigger
+
 - **How it works:**
   - Deploy the script as a serverless function (AWS Lambda, Vercel/Netlify Scheduled Functions).
   - Use a scheduler (e.g., AWS EventBridge, Vercel/Netlify cron) to invoke weekly.
@@ -53,6 +56,7 @@ The app requires up-to-date playlist data from YouTube Music, fetched and stored
   - May require additional permissions for repo writes or storage access.
 
 ### 3. Self-Hosted Cron Job
+
 - **How it works:**
   - Run the script on a personal or company server using cron.
   - Commit and push the updated JSON to the repo.
@@ -96,6 +100,7 @@ The app requires up-to-date playlist data from YouTube Music, fetched and stored
 5. **(Optional) Trigger deploy:** If using Netlify, Vercel, etc., add a step to trigger a build hook after committing changes.
 
 ## References
+
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
 - [Netlify Scheduled Functions](https://docs.netlify.com/functions/scheduled-functions/)
-- [Vercel Cron Jobs](https://vercel.com/docs/cron-jobs) 
+- [Vercel Cron Jobs](https://vercel.com/docs/cron-jobs)

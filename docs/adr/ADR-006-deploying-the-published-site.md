@@ -1,9 +1,11 @@
 # ADR-006: Deploying the Published Site
 
 ## Status
+
 Accepted
 
 ## Date Log
+
 2025-02-22 - Proposed
 2025-02-22 - Accepted, updated to select GitHub Pages as deployment target
 
@@ -34,6 +36,7 @@ Chosen option: "GitHub Pages", because it is completely free for public reposito
 ### Considered options
 
 #### Netlify
+
 - Connects directly to GitHub repository.
 - Automatically builds and deploys the site on push to the main branch.
 - Provides built-in SSL, CDN, custom domain management, and deploy previews.
@@ -42,6 +45,7 @@ Chosen option: "GitHub Pages", because it is completely free for public reposito
 - Familiar workflow for the user.
 
 #### GitHub Pages
+
 - Deploys static site from a branch (e.g., `gh-pages`).
 - Integrates with GitHub Actions for automated builds and deploys.
 - Supports custom domains and SSL via Let's Encrypt.
@@ -50,9 +54,10 @@ Chosen option: "GitHub Pages", because it is completely free for public reposito
 - User is familiar with this workflow.
 
 #### AWS (S3 + CloudFront)
+
 - Host static site in an S3 bucket, serve via CloudFront CDN.
 - Supports custom domains, SSL (via ACM), and advanced CDN configuration.
 - Requires manual setup of S3, CloudFront, SSL certificates, and deployment automation (e.g., via GitHub Actions or CI/CD pipeline).
 - Scalable and highly configurable, but more complex to maintain.
 - May incur costs depending on usage.
-- User has AWS account and experience. 
+- User has AWS account and experience.
