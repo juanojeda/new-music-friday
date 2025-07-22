@@ -59,8 +59,6 @@ function extractDominantColorFromSvg(svg: string): string {
       const fill = $(el).attr('fill');
       const d = $(el).attr('d');
       if (fill && fill !== 'none' && d) {
-        // Count vector points: number of coordinate pairs (numbers or commands followed by numbers)
-        // Split on command letters and whitespace, count number pairs
         const points = d.match(/-?\d*\.?\d+/g);
         const numPoints = points ? points.length / 2 : 0;
         if (numPoints > maxPoints) {
