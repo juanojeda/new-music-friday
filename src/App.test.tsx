@@ -10,12 +10,14 @@ const mockPlaylists: Playlist[] = [
     name: 'New Music Friday - 2024-06-07',
     publishedAt: '2024-06-07T12:00:00Z',
     thumbnail: '',
+    dominantColor: '#ff0000',
   },
   {
     id: '2',
     name: 'New Music Friday - 2024-05-31',
     publishedAt: '2024-05-31T12:00:00Z',
     thumbnail: '',
+    dominantColor: '#ff0000',
   },
 ];
 
@@ -86,5 +88,29 @@ describe('App', () => {
       expect(screen.getByText('New Music Friday - 2024-06-07')).toBeInTheDocument();
     });
     expect(screen.queryByRole('button', { name: /play/i })).not.toBeInTheDocument();
+  });
+
+  it('passes the dominant color to ThemeSwitcher', async () => {
+    render(<App />);
+    await waitFor(() => {
+      expect(screen.getByText('New Music Friday - 2024-06-07')).toBeInTheDocument();
+    });
+
+    expect(document.body).toHaveStyle({
+      backgroundColor: '#ffffff',
+    });
+    expect(screen.getByRole('heading', { level: 1, name: /New Music Friday/ })).toHaveStyle({
+      color: '#465adb',
+    });
+
+    const firstPlaylistButton = screen.getAllByRole('button', { name: /New Music Friday/ })[0];
+    fireEvent.click(firstPlaylistButton);
+
+    expect(document.body).not.toHaveStyle({
+      backgroundColor: '#ffffff',
+    });
+    expect(screen.getByRole('heading', { level: 1, name: /New Music Friday/ })).not.toHaveStyle({
+      color: '#465adb',
+    });
   });
 });

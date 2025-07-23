@@ -3,4 +3,5 @@ export interface Playlist {
   name: string;
   publishedAt: string;
   thumbnail: string;
+  dominantColor: string;
 }

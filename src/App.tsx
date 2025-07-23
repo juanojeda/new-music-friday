@@ -3,13 +3,14 @@ import PlaylistList from './components/PlaylistList';
 import AudioPlayer from './components/AudioPlayer';
 import { Playlist } from './libs/types';
 import ThemeSwitcher from './components/ThemeSwitcher';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, Typography } from '@mui/material';
 
 function App() {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [dominantColor, setDominantColor] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}playlists.nmf.json`)
@@ -29,11 +30,26 @@ function App() {
 
   const selectedPlaylist = playlists.find((p) => p.id === selectedId) || null;
 
+  useEffect(
+    function setDominantColorFromPlaylist() {
+      if (selectedPlaylist) {
+        const color = selectedPlaylist.dominantColor;
+        setDominantColor(color || undefined);
+      } else {
+        setDominantColor(undefined);
+      }
+    },
+    [selectedPlaylist],
+  );
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Failed to load playlists.</div>;
 
   return (
-    <ThemeSwitcher>
+    <ThemeSwitcher dominantColor={dominantColor}>
+      <Typography variant="h1" align="center" color="primary">
+        New Music Friday
+      </Typography>
       <CssBaseline />
       <AudioPlayer playlist={selectedPlaylist} />
       <PlaylistList
