@@ -8,22 +8,9 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 
 ## Migration Plan - React, Material UI, and Standard Tooling
 
-### Core Features Migration
-
-- [ ] **REQ-009**: Dynamic Material UI theme from playlist artwork
-  - Priority: High
-  - Dependencies: REQ-008
-  - Status: Not Started
-  - Requirements File: [REQ-009-dynamic-theme-from-artwork.md](docs/requirements/REQ-009-dynamic-theme-from-artwork.md)
-  - Atomic Tasks:
-    - [x] During fetch-playlists, generate unique SVG artwork for each playlist using jdenticon and include it in playlists.nmf.json
-    - [x] During fetch-playlists, extract dominant color from each SVG artwork and include it in playlists.nmf.json
-    - [x] Generate Material UI theme palette from dominant color for each playlist
-    - [x] Dynamically update app theme on playlist selection
-    - [x] Smoothly transition between themes
-
 ## Completed Items
 
+- REQ-009: Dynamic Material UI theme from playlist artwork
 - REQ-010: Deploy static site to GitHub Pages via GitHub Actions and gh-pages branch
 - REQ-008: Migrated playlist fetching logic to React/Vite infrastructure
 - CF-001: Implement weekly playlist fetching and static site generation
