@@ -11,6 +11,7 @@ const mockPlaylists: Playlist[] = [
     publishedAt: '2024-06-07T12:00:00Z',
     thumbnail: '',
     dominantColor: '#ff0000',
+    artworkSvg: `<svg></svg>`,
   },
   {
     id: '2',
@@ -18,6 +19,7 @@ const mockPlaylists: Playlist[] = [
     publishedAt: '2024-05-31T12:00:00Z',
     thumbnail: '',
     dominantColor: '#ff0000',
+    artworkSvg: `<svg></svg>`,
   },
 ];
 

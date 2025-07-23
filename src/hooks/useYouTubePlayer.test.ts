@@ -10,6 +10,8 @@ const mockPlaylist: Playlist = {
   name: 'Test Playlist',
   publishedAt: '2024-01-01T00:00:00Z',
   thumbnail: '',
+  artworkSvg: `<svg></svg>`,
+  dominantColor: '#ff0000',
 };
 
 declare global {

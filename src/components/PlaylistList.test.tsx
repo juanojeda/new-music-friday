@@ -10,12 +10,16 @@ const mockPlaylists: Playlist[] = [
     name: 'New Music Friday - 2024-06-07',
     publishedAt: '2024-06-07T12:00:00Z',
     thumbnail: '',
+    dominantColor: '#ff0000',
+    artworkSvg: `<svg></svg>`,
   },
   {
     id: '2',
     name: 'New Music Friday - 2024-05-31',
     publishedAt: '2024-05-31T12:00:00Z',
     thumbnail: '',
+    dominantColor: '#ff0000',
+    artworkSvg: `<svg></svg>`,
   },
 ];
 

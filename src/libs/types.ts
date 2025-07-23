@@ -4,4 +4,5 @@ export interface Playlist {
   publishedAt: string;
   thumbnail: string;
   dominantColor: string;
+  artworkSvg: string;
 }
