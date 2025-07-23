@@ -1,8 +1,6 @@
-import './App.css';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import React, { useEffect, useState } from 'react';
 import PlaylistList from './components/PlaylistList';
 import AudioPlayer from './components/AudioPlayer';
-import React, { useEffect, useState } from 'react';
 import { Playlist } from './libs/types';
 import ThemeSwitcher from './components/ThemeSwitcher';
 import { CssBaseline } from '@mui/material';
