@@ -65,7 +65,7 @@ describe('ThemeSwitcher', () => {
 
       for (const [testId, value] of matchers) {
         expect(screen.getByTestId(testId)).not.toHaveTextContent(value);
-        expect(screen.getByTestId(testId).textContent).toEqual(expect.any(String));
+        expect(screen.getByTestId(testId).textContent).toMatch(/#\w{6}/);
       }
     });
   });

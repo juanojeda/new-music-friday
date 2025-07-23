@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from '@emotion/react';
 import { themeFromSourceColor, argbFromHex, hexFromArgb } from '@material/material-color-utilities';
-import { createTheme, lighten } from '@mui/material';
+import { createTheme, lighten, ThemeOptions } from '@mui/material';
 
 interface ThemeSwitcherProps extends React.PropsWithChildren {
   dominantColor?: string;
 }
 
-const defaultTheme = {
+const defaultTheme: ThemeOptions['palette'] = {
   primary: {
     main: '#465adb',
   },
@@ -27,7 +27,9 @@ const defaultTheme = {
 };
 
 export default function ThemeSwitcher({ children, dominantColor }: ThemeSwitcherProps) {
-  const [themeConfig, setThemeConfig] = useState({ palette: defaultTheme });
+  const [themeConfig, setThemeConfig] = useState<ThemeOptions>({
+    palette: defaultTheme,
+  });
 
   useEffect(
     function applyThemeFromDominantColor() {
@@ -49,15 +51,12 @@ export default function ThemeSwitcher({ children, dominantColor }: ThemeSwitcher
           error: {
             main: hexFromArgb(lightScheme.error),
           },
-          grey: {
-            500: hexFromArgb(neutral.keyColor['argb']),
-          },
           background: {
             default: lighten(hexFromArgb(lightScheme.tertiary), 0.85),
           },
           text: {
-            primary: neutral.keyColor['argb'],
-            secondary: neutralVariant.keyColor['argb'],
+            primary: hexFromArgb(neutral.keyColor['argb']),
+            secondary: hexFromArgb(neutralVariant.keyColor['argb']),
           },
         },
       };
