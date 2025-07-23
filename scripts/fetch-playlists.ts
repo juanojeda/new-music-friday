@@ -73,7 +73,7 @@ function extractDominantColorFromSvg(svg: string): string {
 }
 
 const addArtworkSvgToPlaylist = (playlist: Playlist): PlaylistWithArtwork => {
-  const artworkSvg = toSvg(playlist.id, 64);
+  const artworkSvg = toSvg(`${playlist.id}-${playlist.name}`, 200, { backColor: '#ffffff' });
   const dominantColor = extractDominantColorFromSvg(artworkSvg);
   return {
     ...playlist,
