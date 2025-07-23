@@ -3,7 +3,7 @@ import PlaylistList from './components/PlaylistList';
 import AudioPlayer from './components/AudioPlayer';
 import { Playlist } from './libs/types';
 import ThemeSwitcher from './components/ThemeSwitcher';
-import { CssBaseline, Typography } from '@mui/material';
+import { CssBaseline, Typography, Grid } from '@mui/material';
 
 function App() {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -47,16 +47,25 @@ function App() {
 
   return (
     <ThemeSwitcher dominantColor={dominantColor}>
-      <Typography variant="h1" align="center" color="primary">
-        New Music Friday
-      </Typography>
       <CssBaseline />
-      <AudioPlayer playlist={selectedPlaylist} />
-      <PlaylistList
-        playlists={playlists}
-        selectedId={selectedId}
-        onSelect={(playlist) => setSelectedId(playlist.id)}
-      />
+      <Grid container alignItems={'center'} justifyContent="center" spacing={2}>
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+          }}
+        >
+          <Typography variant="h1" align="center" color="primary">
+            New Music Friday
+          </Typography>
+          <AudioPlayer playlist={selectedPlaylist} />
+          <PlaylistList
+            playlists={playlists}
+            selectedId={selectedId}
+            onSelect={(playlist) => setSelectedId(playlist.id)}
+          />
+        </Grid>
+      </Grid>
     </ThemeSwitcher>
   );
 }
