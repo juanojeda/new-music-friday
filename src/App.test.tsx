@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import App from './App';
 import { Playlist } from './libs/types';
@@ -84,6 +84,51 @@ describe('App', () => {
     expect(await screen.findByRole('slider', { name: /seek/i })).toBeInTheDocument();
   });
 
+  it('sets the most recent playlist after a delay', async () => {
+    vi.spyOn(useYouTubePlayerModule, 'useYouTubePlayer').mockReturnValue({
+      playerRef: {
+        current: {
+          playVideo: vi.fn(),
+          pauseVideo: vi.fn(),
+          seekTo: vi.fn(),
+          nextVideo: vi.fn(),
+          previousVideo: vi.fn(),
+        },
+      },
+      playerReady: true,
+      playerDivId: { current: 'yt-player-mock' },
+      playerState: 'paused',
+      currentTrackIndex: 0,
+      totalTracks: 1,
+      currentTrack: { artist: '', title: '', length: 0 },
+      playhead: 0,
+      duration: 245,
+    });
+    // Mock window.YT.Player to capture onReady
+    let onReadyCallback: (() => void) | undefined;
+    window.YT = {
+      Player: vi.fn((_id, opts) => {
+        onReadyCallback = opts.events.onReady;
+        return { destroy: vi.fn() };
+      }),
+    };
+
+    render(<App />);
+
+    await waitFor(() =>
+      expect(screen.getByText(/New Music Friday - 2024-06-07/)).toBeInTheDocument(),
+    );
+
+    vi.useFakeTimers();
+    vi.advanceTimersByTime(1000);
+    vi.useRealTimers();
+
+    onReadyCallback && onReadyCallback();
+
+    expect(await screen.findByRole('button', { name: /play/i })).toBeInTheDocument();
+    expect(await screen.findByRole('slider', { name: /seek/i })).toBeInTheDocument();
+  });
+
   it('does not render AudioPlayer when no playlist is selected', async () => {
     render(<App />);
     await waitFor(() => {
@@ -101,7 +146,7 @@ describe('App', () => {
     expect(document.body).toHaveStyle({
       backgroundColor: '#ffffff',
     });
-    expect(screen.getByRole('heading', { level: 1, name: /New Music Friday/ })).toHaveStyle({
+    expect(screen.getByRole('heading', { name: /New Music Friday/ })).toHaveStyle({
       color: '#465adb',
     });
 
@@ -111,7 +156,7 @@ describe('App', () => {
     expect(document.body).not.toHaveStyle({
       backgroundColor: '#ffffff',
     });
-    expect(screen.getByRole('heading', { level: 1, name: /New Music Friday/ })).not.toHaveStyle({
+    expect(screen.getByRole('heading', { name: /New Music Friday/ })).not.toHaveStyle({
       color: '#465adb',
     });
   });

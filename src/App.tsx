@@ -31,6 +31,20 @@ function App() {
   const selectedPlaylist = playlists.find((p) => p.id === selectedId) || null;
 
   useEffect(
+    function setMostRecentPlaylistAfterDelay() {
+      if (playlists.length === 0) return;
+      if (selectedId) return;
+
+      const setPlaylist = () => {
+        setSelectedId(playlists[0].id);
+      };
+      const timeoutId = setTimeout(setPlaylist, 1000);
+      return () => clearTimeout(timeoutId);
+    },
+    [playlists],
+  );
+
+  useEffect(
     function setDominantColorFromPlaylist() {
       if (selectedPlaylist) {
         const color = selectedPlaylist.dominantColor;
@@ -55,7 +69,7 @@ function App() {
             sm: 6,
           }}
         >
-          <Typography variant="h1" align="center" color="primary">
+          <Typography variant="h2" align="center" color="primary" mt={4} mb={5}>
             New Music Friday
           </Typography>
           <AudioPlayer playlist={selectedPlaylist} />
