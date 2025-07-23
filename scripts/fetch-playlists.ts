@@ -8,6 +8,7 @@ export interface FetchPlaylistsOptions {
   apiKey: string;
   channelId: string;
   namePrefix: string;
+  fileName?: string; // Optional, defaults to 'playlists.nmf.json'
 }
 
 export interface Playlist {
@@ -81,14 +82,14 @@ const addArtworkSvgToPlaylist = (playlist: Playlist): PlaylistWithArtwork => {
   };
 };
 
-const getPlaylistsJsonPath = () => {
+const getPlaylistsJsonPath = (fileName: string) => {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
-  return path.resolve(__dirname, '../public/playlists.nmf.json');
+  return path.resolve(__dirname, `../public/${fileName}`);
 };
 
-const writePlaylistsJson = (playlists: PlaylistWithArtwork[]) => {
-  const outPath = getPlaylistsJsonPath();
+const writePlaylistsJson = (playlists: PlaylistWithArtwork[], filename) => {
+  const outPath = getPlaylistsJsonPath(filename);
   fs.writeFileSync(outPath, JSON.stringify(playlists, null, 2));
 };
 
@@ -97,6 +98,7 @@ const redactKey = (key: string) =>
 
 export async function fetchPlaylists(opts: FetchPlaylistsOptions): Promise<void> {
   const url = buildYouTubeApiUrl(opts);
+  const fileName = opts.fileName || 'playlists.nmf.json';
   console.log('[fetch-playlists] Fetching playlists');
   const res = await fetch(url);
   if (!res.ok) {
@@ -108,10 +110,8 @@ export async function fetchPlaylists(opts: FetchPlaylistsOptions): Promise<void>
   const filtered = (data.items || []).filter(filterByPrefix(opts.namePrefix));
   const mapped: Playlist[] = filtered.map(mapToPlaylist);
   const playlists: PlaylistWithArtwork[] = mapped.map(addArtworkSvgToPlaylist);
-  console.log(
-    `[fetch-playlists] Writing ${playlists.length} playlists to public/playlists.nmf.json`,
-  );
-  writePlaylistsJson(playlists);
+  console.log(`[fetch-playlists] Writing ${playlists.length} playlists to public/${fileName}`);
+  writePlaylistsJson(playlists, fileName);
 }
 
 // Load .env for local development

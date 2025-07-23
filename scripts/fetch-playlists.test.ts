@@ -13,7 +13,8 @@ vi.mock('fs', async () => {
 // Import the stubbed fetchPlaylists function
 import { fetchPlaylists } from './fetch-playlists';
 
-const _TEST_JSON_PATH = path.resolve(__dirname, '../public/playlists.nmf.json');
+const _TEST_JSON_FILE = 'playlists.test.nmf.json';
+const _TEST_JSON_PATH = path.resolve(__dirname, `../public/${_TEST_JSON_FILE}`);
 
 describe('fetch-playlists script', () => {
   beforeEach(async () => {
@@ -23,7 +24,7 @@ describe('fetch-playlists script', () => {
     }
   });
 
-  it('writes an array of playlists with id, name, publishedAt, and thumbnail to public/playlists.nmf.json', async () => {
+  it('writes an array of playlists with id, name, publishedAt, and thumbnail to public/playlists.test.nmf.json', async () => {
     // Arrange: mock YouTube API response and fs
     const _mockPlaylists = [
       {
@@ -119,6 +120,7 @@ describe('fetch-playlists script', () => {
       apiKey: 'FAKE_KEY',
       channelId: 'FAKE_CHANNEL',
       namePrefix: 'New Music Friday',
+      fileName: _TEST_JSON_FILE,
     });
     // Assert: only playlists with the prefix are written
     const [_filePath, data] = (
@@ -142,20 +144,6 @@ describe('fetch-playlists script', () => {
   });
 
   it('includes a unique SVG artwork for each playlist in playlists.nmf.json', async () => {
-    const _mockPlaylists = [
-      {
-        id: 'PL123',
-        name: 'New Music Friday 2025 July 18',
-        publishedAt: '2025-07-15T04:03:29.241254Z',
-        thumbnail: 'https://i.ytimg.com/vi/IKy-thh3fyE/default.jpg',
-      },
-      {
-        id: 'PL456',
-        name: 'New Music Friday - 2025 Jul 4',
-        publishedAt: '2025-07-04T01:36:51.142934Z',
-        thumbnail: 'https://i.ytimg.com/vi/NYQc2Q2omAQ/default.jpg',
-      },
-    ];
     const mockApiResponse = {
       items: [
         {
@@ -181,7 +169,7 @@ describe('fetch-playlists script', () => {
       ok: true,
       json: async () => mockApiResponse,
     });
-    await fetchPlaylists({ apiKey: '', channelId: '', namePrefix: '' });
+    await fetchPlaylists({ apiKey: '', channelId: '', namePrefix: '', fileName: _TEST_JSON_FILE });
     // Get the written data
     expect(fs.writeFileSync).toHaveBeenCalled();
     const [_filePath, data] = (
@@ -223,7 +211,7 @@ describe('fetch-playlists script', () => {
       ok: true,
       json: async () => mockApiResponse,
     });
-    await fetchPlaylists({ apiKey: '', channelId: '', namePrefix: '' });
+    await fetchPlaylists({ apiKey: '', channelId: '', namePrefix: '', fileName: _TEST_JSON_FILE });
     expect(fs.writeFileSync).toHaveBeenCalled();
     const [_filePath, data] = (
       fs.writeFileSync as unknown as { mock: { calls: [unknown, string][] } }
