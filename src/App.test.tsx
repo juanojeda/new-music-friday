@@ -143,9 +143,6 @@ describe('App', () => {
       expect(screen.getByText('New Music Friday - 2024-06-07')).toBeInTheDocument();
     });
 
-    expect(document.body).toHaveStyle({
-      backgroundColor: '#ffffff',
-    });
     expect(screen.getByRole('heading', { name: /New Music Friday/ })).toHaveStyle({
       color: '#465adb',
     });

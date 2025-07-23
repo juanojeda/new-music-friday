@@ -3,7 +3,7 @@ import PlaylistList from './components/PlaylistList';
 import AudioPlayer from './components/AudioPlayer';
 import { Playlist } from './libs/types';
 import ThemeSwitcher from './components/ThemeSwitcher';
-import { CssBaseline, Typography, Grid } from '@mui/material';
+import { CssBaseline, Typography, Grid, GlobalStyles, lighten, alpha } from '@mui/material';
 
 function App() {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -56,12 +56,31 @@ function App() {
     [selectedPlaylist],
   );
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Failed to load playlists.</div>;
-
   return (
     <ThemeSwitcher dominantColor={dominantColor}>
       <CssBaseline />
+      <GlobalStyles
+        styles={({ palette, transitions }) => ({
+          '*': {
+            transition: transitions.create(['color'], {
+              duration: 300,
+              easing: transitions.easing.easeInOut,
+              delay: 500,
+            }),
+          },
+          body: {
+            backgroundColor: lighten(palette.primary.main, 0.2),
+            backgroundImage: `url(https://grainy-gradients.vercel.app/noise.svg), linear-gradient(120deg, ${alpha(palette.background.paper, 1)}, ${alpha(palette.background.paper, 0.5)})`,
+            minHeight: '100vh',
+            width: '100vw',
+            transition: transitions.create(['background-color'], {
+              duration: 300,
+              easing: transitions.easing.easeInOut,
+              delay: 500,
+            }),
+          },
+        })}
+      />
       <Grid container alignItems={'center'} justifyContent="center" spacing={2}>
         <Grid
           size={{
@@ -72,12 +91,32 @@ function App() {
           <Typography variant="h2" align="center" color="primary" mt={4} mb={5}>
             New Music Friday
           </Typography>
-          <AudioPlayer playlist={selectedPlaylist} />
-          <PlaylistList
-            playlists={playlists}
-            selectedId={selectedId}
-            onSelect={(playlist) => setSelectedId(playlist.id)}
-          />
+
+          {loading && (
+            <Typography variant="h6" align="center">
+              Loading...
+            </Typography>
+          )}
+          {error && (
+            <Typography variant="h6" align="center" color="error">
+              Error loading playlists
+            </Typography>
+          )}
+          {!loading && !error && playlists.length === 0 && (
+            <Typography variant="h6" align="center">
+              No playlists available
+            </Typography>
+          )}
+          {playlists.length > 0 && (
+            <>
+              <AudioPlayer playlist={selectedPlaylist} />
+              <PlaylistList
+                playlists={playlists}
+                selectedId={selectedId}
+                onSelect={(playlist) => setSelectedId(playlist.id)}
+              />
+            </>
+          )}
         </Grid>
       </Grid>
     </ThemeSwitcher>
