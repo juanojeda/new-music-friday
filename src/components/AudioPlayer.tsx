@@ -73,6 +73,20 @@ function AlbumArtwork({ artworkSvg }: { artworkSvg: string }) {
   );
 }
 
+function TrackDataSkeleton() {
+  return (
+    <Box
+      display={'flex'}
+      flexDirection="column"
+      alignItems="center"
+      sx={{ height: '4rem', mb: 1, mt: 2 }}
+    >
+      <Skeleton variant="text" width={200} />
+      <Skeleton variant="text" width={200} />
+    </Box>
+  );
+}
+
 function CurrentTrack({
   currentTrackIndex,
   totalTracks,
@@ -83,7 +97,7 @@ function CurrentTrack({
   currentTrack: { artist: string; title: string; length: number };
 }) {
   return (
-    <Box textAlign="center" mt={2} mb={2}>
+    <Box textAlign="center" mt={2} mb={2} sx={{ height: '4rem' }}>
       <Typography component={'div'} variant="subtitle2" data-testid="track-number">
         {`Track ${currentTrackIndex + 1} of ${totalTracks}`}
       </Typography>
@@ -93,6 +107,27 @@ function CurrentTrack({
       <Typography component={'div'} variant="subtitle2" data-testid="track-artist">
         {currentTrack.artist}
       </Typography>
+    </Box>
+  );
+}
+
+function ControlsSkeleton() {
+  return (
+    <Box display={'flex'} flexDirection="column" alignItems="center">
+      <Skeleton
+        variant="rectangular"
+        width={200}
+        height={40}
+        sx={{ marginBottom: 3, marginTop: 1.5 }}
+      />
+      <Skeleton
+        variant="rectangular"
+        width={'100%'}
+        height={35}
+        sx={{
+          marginBottom: '.6rem',
+        }}
+      />
     </Box>
   );
 }
@@ -165,36 +200,6 @@ function Controls({
         </Grid>
       }
     </Grid>
-  );
-}
-
-function TrackDataSkeleton() {
-  return (
-    <Box mt={2} mb={1} display={'flex'} flexDirection="column" alignItems="center">
-      <Skeleton variant="text" width={200} />
-      <Skeleton variant="text" width={200} />
-    </Box>
-  );
-}
-
-function ControlsSkeleton() {
-  return (
-    <Box display={'flex'} flexDirection="column" alignItems="center">
-      <Skeleton
-        variant="rectangular"
-        width={200}
-        height={40}
-        sx={{ marginBottom: 3, marginTop: 1.5 }}
-      />
-      <Skeleton
-        variant="rectangular"
-        width={'100%'}
-        height={35}
-        sx={{
-          marginBottom: '.8rem',
-        }}
-      />
-    </Box>
   );
 }
 
