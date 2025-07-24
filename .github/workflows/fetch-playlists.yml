@@ -2,7 +2,7 @@ name: Weekly Playlist Fetch
 
 on:
   schedule:
-    - cron: '0 2 * * 4' # Every Friday at 10:00 AEST / 0:00 UTC
+    - cron: '20 2 * * 4' # Testing Cron at UTC 02:20 (AEST 12:20)
   workflow_dispatch:
 
 permissions:
