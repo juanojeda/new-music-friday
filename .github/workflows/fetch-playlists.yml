@@ -2,7 +2,7 @@ name: Weekly Playlist Fetch
 
 on:
   schedule:
-    - cron: '20 2 * * 4' # Testing Cron at UTC 02:20 (AEST 12:20)
+    - cron: '0 22 * * 4' # Friday at UTC 22:00 (AEST 08:00)
   workflow_dispatch:
 
 permissions:
@@ -43,7 +43,7 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           if [[ `git status --porcelain public/playlists.nmf.json` ]]; then
             git add public/playlists.nmf.json
-            git commit -m "chore: update playlists.nmf.json [skip ci]"
+            git commit -m "chore: update playlists.nmf.json"
             git push
           fi
 
