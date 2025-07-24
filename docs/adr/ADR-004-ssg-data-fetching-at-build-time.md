@@ -6,8 +6,8 @@ Accepted
 
 ## Date Log
 
-2025-07-19 - Proposed
-2025-07-19 - Accepted
+- 2025-07-19 - Proposed
+- 2025-07-19 - Accepted
 
 ## Context & Problem Statement
 
