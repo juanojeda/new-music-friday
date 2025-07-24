@@ -6,8 +6,6 @@ A web app that fetches, displays, and allows playback of public YouTube Music pl
 
 ## Work Items
 
-## Migration Plan - React, Material UI, and Standard Tooling
-
 ## Completed Items
 
 - REQ-009: Dynamic Material UI theme from playlist artwork
