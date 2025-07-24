@@ -12,7 +12,8 @@
     "test": "vitest",
     "typecheck": "tsc --noEmit",
     "validate": "npm run format; npm run test -- --run; npm run typecheck; npm run lint",
-    "fetch-playlists": "tsx scripts/fetch-playlists.ts"
+    "fetch-playlists": "tsx scripts/fetch-playlists.ts",
+    "estimate-hours": "tsx scripts/estimate-hours.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
