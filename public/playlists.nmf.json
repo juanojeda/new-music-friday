@@ -1,5 +1,13 @@
 [
   {
+    "id": "PLNGy7pgfV09YDAE7W6CbPPkOxLtSH4YZQ",
+    "name": "New Music Friday 2025 Aug 15",
+    "publishedAt": "2025-08-11T07:10:10.095181Z",
+    "thumbnail": "https://i.ytimg.com/vi/jOqRhB76M5k/default.jpg",
+    "artworkSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"200\" height=\"200\" viewBox=\"0 0 200 200\"><rect width=\"100%\" height=\"100%\" fill=\"#ffffff\" opacity=\"1.00\"/><path fill=\"#464646\" d=\"M100 16L100 58L79 58ZM142 58L100 58L100 37ZM100 184L100 142L121 142ZM58 142L100 142L100 163ZM58 58L58 100L37 100ZM184 100L142 100L142 79ZM142 142L142 100L163 100ZM16 100L58 100L58 121Z\"/><path fill=\"#59c7a6\" d=\"M23 37a14,14 0 1,1 28,0a14,14 0 1,1 -28,0M149 37a14,14 0 1,1 28,0a14,14 0 1,1 -28,0M149 163a14,14 0 1,1 28,0a14,14 0 1,1 -28,0M23 163a14,14 0 1,1 28,0a14,14 0 1,1 -28,0M74.8 100a25.2,25.2 0 1,1 50.4,0a25.2,25.2 0 1,1 -50.4,0\"/></svg>",
+    "dominantColor": "#59c7a6"
+  },
+  {
     "id": "PLNGy7pgfV09bfKbhY2w1paBhtUFUaXddP",
     "name": "New Music Friday 2025 Jul 25",
     "publishedAt": "2025-07-24T02:42:44.860923Z",
